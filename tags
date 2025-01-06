@@ -83,14 +83,15 @@ build_project_bin	/home/byron/.config/nvim/lua/autocmd.lua	/^function build_proj
 build_project_sym	/home/byron/.config/nvim/lua/autocmd.lua	/^function build_project_sym()$/;"	f
 callback	/home/byron/.config/nvim/lua/autocmd.lua	/^    callback = function()$/;"	f
 callback	/home/byron/.config/nvim/lua/autocmd.lua	/^  callback = function()$/;"	f
-callback	/home/byron/.config/nvim/lua/dap_cpp.lua	/^  callback = function()$/;"	f
 callback	/home/byron/.config/nvim/lua/plugins.lua	/^  callback = function()$/;"	f
 check_back_space	/home/byron/.config/nvim/lua/coc_init.lua	/^function _G.check_back_space()$/;"	f	unknown:_G
 clear_debug_keymaps	/home/byron/.config/nvim/lua/dap_cpp.lua	/^local function clear_debug_keymaps()$/;"	f
+close_debug_session	/home/byron/.config/nvim/lua/dap_cpp.lua	/^function close_debug_session()$/;"	f
 cmap	/home/byron/.config/nvim/lua/keymaps.lua	/^function cmap(shortcut, command)$/;"	f
 config	/home/byron/.config/nvim/lua/plugins.lua	/^            config = function()$/;"	f
 config	/home/byron/.config/nvim/lua/plugins.lua	/^          config = function()$/;"	f
 config	/home/byron/.config/nvim/lua/plugins.lua	/^      config = function()$/;"	f
+create_tmux_split_and_get_pty	/home/byron/.config/nvim/lua/dap_cpp.lua	/^local function create_tmux_split_and_get_pty()$/;"	f
 custom_filter	/home/byron/.config/nvim/lua/plugins.lua	/^    custom_filter = function(bufnr)$/;"	f
 d	/home/byron/.config/nvim/autoload/plug.vim	/^      nnoremap <silent> <buffer> d :set opfunc=<sid>delete_op<cr>g@$/;"	m
 d	/home/byron/.config/nvim/autoload/plug.vim	/^      xnoremap <silent> <buffer> d :<c-u>call <sid>delete_op(visualmode(), 1)<cr>$/;"	m
@@ -277,16 +278,25 @@ s:warn	/home/byron/.config/nvim/autoload/plug.vim	/^function! s:warn(cmd, msg)$/
 s:with_cd	/home/byron/.config/nvim/autoload/plug.vim	/^function! s:with_cd(cmd, dir, ...)$/;"	f
 s:wrap_cmds	/home/byron/.config/nvim/autoload/plug.vim	/^  function! s:wrap_cmds(cmds)$/;"	f
 save_profiles	/home/byron/.config/nvim/plugin/packer_compiled.lua	/^local function save_profiles(threshold)$/;"	f
+set -g message-style "bg	/home/byron/.config/nvim/.tmux.conf	/^set -g message-style "bg=#00346e, fg=#ffffd7"        # tomorrow night blue, base3$/;"	k
 set -g message-style "bg	/home/byron/.config/nvim/terminal/.tmux.conf	/^set -g message-style "bg=#00346e, fg=#ffffd7"        # tomorrow night blue, base3$/;"	k
+set -g status-style "bg	/home/byron/.config/nvim/.tmux.conf	/^set -g status-style "bg=#00346e, fg=#ffffd7"   # tomorrow night blue, base3$/;"	k
 set -g status-style "bg	/home/byron/.config/nvim/terminal/.tmux.conf	/^set -g status-style "bg=#00346e, fg=#ffffd7"   # tomorrow night blue, base3$/;"	k
+set -wg pane-active-border-style "fg	/home/byron/.config/nvim/.tmux.conf	/^set -wg pane-active-border-style "fg=blue"$/;"	k
 set -wg pane-active-border-style "fg	/home/byron/.config/nvim/terminal/.tmux.conf	/^set -wg pane-active-border-style "fg=blue"$/;"	k
+set -wg pane-border-style "fg	/home/byron/.config/nvim/.tmux.conf	/^set -wg pane-border-style "fg=#585858"       # base01$/;"	k
 set -wg pane-border-style "fg	/home/byron/.config/nvim/terminal/.tmux.conf	/^set -wg pane-border-style "fg=#585858"       # base01$/;"	k
+set -wg window-status-current-style "bg	/home/byron/.config/nvim/.tmux.conf	/^set -wg window-status-current-style "bg=#00afff" # red$/;"	k
 set -wg window-status-current-style "bg	/home/byron/.config/nvim/terminal/.tmux.conf	/^set -wg window-status-current-style "bg=#00afff" # red$/;"	k
+set -wg window-status-last-style "fg	/home/byron/.config/nvim/.tmux.conf	/^set -wg window-status-last-style "fg=#00afff"$/;"	k
 set -wg window-status-last-style "fg	/home/byron/.config/nvim/terminal/.tmux.conf	/^set -wg window-status-last-style "fg=#00afff"$/;"	k
 set_filetype_keymaps	/home/byron/.config/nvim/lua/nv_utils.lua	/^local function set_filetype_keymaps(ft, map_cmd, lhs, rhs, opts)$/;"	f
 setup_debug_keymaps	/home/byron/.config/nvim/lua/dap_cpp.lua	/^local function setup_debug_keymaps()$/;"	f
 show_docs	/home/byron/.config/nvim/lua/coc_init.lua	/^function _G.show_docs()$/;"	f	unknown:_G
+start_debug_session	/home/byron/.config/nvim/lua/dap_cpp.lua	/^function start_debug_session()$/;"	f
+start_debug_session_new	/home/byron/.config/nvim/lua/dap_cpp.lua	/^function start_debug_session_new()$/;"	f
 switch_file_and_search	/home/byron/.config/nvim/lua/plugins.lua	/^function switch_file_and_search()$/;"	f
+terminate_tmux_split_and_get_pty	/home/byron/.config/nvim/lua/dap_cpp.lua	/^function terminate_tmux_split_and_get_pty()$/;"	f
 time	/home/byron/.config/nvim/plugin/packer_compiled.lua	/^  time = function(chunk, start) end$/;"	f
 time	/home/byron/.config/nvim/plugin/packer_compiled.lua	/^  time = function(chunk, start)$/;"	f
 try_loadstring	/home/byron/.config/nvim/plugin/packer_compiled.lua	/^local function try_loadstring(s, component, name)$/;"	f

@@ -116,8 +116,9 @@ vim.cmd 'colorscheme gruvbox'
 vim.cmd 'set signcolumn=yes'
 
 -- 代码折叠问题
-vim.cmd "set foldmethod=indent"
-vim.cmd 'set foldlevel=99'
+vim.cmd "set foldmethod=manual"
+-- vim.cmd "set foldmethod=indent"
+-- vim.cmd 'set foldlevel=99'
 vim.cmd 'set mouse='
 -- 多编码支持
 vim.cmd 'set fileencodings=utf-8,gbk'

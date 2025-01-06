@@ -139,7 +139,6 @@ require('packer').startup(function(use)
             "RainbowViolet",
             "RainbowCyan",
         }
-
         local hooks = require "ibl.hooks"
         -- create the highlight groups in the highlight setup hook, so they are reset
         -- every time the colorscheme changes
@@ -153,7 +152,10 @@ require('packer').startup(function(use)
             vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
         end)
 
-        require("ibl").setup { indent = { highlight = highlight } }
+        vim.g.rainbow_delimiters = { highlight = highlight }
+        require("ibl").setup { scope = { highlight = highlight } }
+
+        hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
       end
     }
 
@@ -194,6 +196,7 @@ require('packer').startup(function(use)
         'rcarriga/nvim-dap-ui',
         'theHamsta/nvim-dap-virtual-text',
         'mfussenegger/nvim-dap-python',
+        'nvim-telescope/telescope-dap.nvim'
       }
     }
 
@@ -360,7 +363,7 @@ require("bufferline").setup{
 vim.api.nvim_create_autocmd({'BufEnter','BufAdd','BufNew','BufNewFile','BufWinEnter'}, {
   group = vim.api.nvim_create_augroup('TS_FOLD_WORKAROUND', {}),
   callback = function()
-    vim.opt.foldmethod     = 'expr'
+    -- vim.opt.foldmethod     = 'expr'
     vim.opt.foldexpr       = 'nvim_treesitter#foldexpr()'
   end
 })
@@ -714,17 +717,6 @@ require("diffview").setup({
 })
 
 ------------------------------------------------------------------------------------------
--- indent-blankline 配置
-------------------------------------------------------------------------------------------
--- require("ibl").setup({
---     debounce = 10,
---     indent = { char = "¦" },
---     whitespace = { highlight = { "Whitespace", "NonText" }, remove_blankline_trail=false },
---     scope = { exclude = { language = { "dashboard" } }, show_start=false, show_end=false, show_exact_scope=true },
--- })
-
-
-------------------------------------------------------------------------------------------
 -- 注释插件 Comment 配置
 ------------------------------------------------------------------------------------------
 require('Comment').setup({
@@ -836,7 +828,7 @@ lspconfig.pyright.setup({
     keymap(bufnr, 'n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
     keymap(bufnr, 'n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
     keymap(bufnr, 'n', '<leader>rn', '<Cmd>lua vim.lsp.buf.rename()<CR>', opts)
-    keymap(bufnr, 'n', '<leader>ff', '<Cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+    keymap(bufnr, 'n', '<leader>ff', '<Cmd>lua vim.lsp.buf.format()<CR>', opts)
     keymap(bufnr, 'n', '<leader>fx', '<Cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   end,
   settings = {
@@ -1094,17 +1086,15 @@ null_ls.setup({
   sources = {
     -- 添加你需要的格式化工具
     -- null_ls.builtins.formatting.prettier, -- JavaScript/TypeScript/CSS/HTML 格式化
-    -- null_ls.builtins.formatting.black,    -- Python 格式化
     -- null_ls.builtins.formatting.stylua,   -- Lua 格式化
-    -- null_ls.builtins.formatting.clang_format, -- C/C++ 格式化
     -- null_ls.builtins.formatting.gofmt,    -- Go 格式化
+    null_ls.builtins.formatting.yapf.with({
+      command = "python3",
+      args = { "-m", "yapf" },
+    }), -- 使用 yapf
     null_ls.builtins.formatting.clang_format.with({
-      -- 可选：指定 clang-format 的路径
-      -- command = "clang-format",
-      -- 可选：自定义 clang-format 的样式文件
       extra_args = { "-style", "file:" .. vim.fn.expand("~") .."/.config/nvim/.clang-format" }, -- 使用项目根目录下的 .clang-format 文件
-      -- 可选：指定文件类型
-      -- filetypes = { "cpp", "c" },
+      filetypes = { "cpp", "c", "cxx", "hpp", "h" },
     }),
   },
 })
@@ -1117,7 +1107,7 @@ require('cmake-tools').setup({
   ctest_command = 'ctest', -- CTest 可执行文件路径
   cmake_build_directory = 'build', -- 构建目录
   cmake_build_options = {}, -- 额外的构建选项
-  cmake_soft_link_compile_commands = true, -- 软链接 compile_commands.json
+  cmake_soft_link_compile_commands = false, -- 软链接 compile_commands.json
   cmake_kits_global = {}, -- 全局编译器工具链配置
 })
 
@@ -1181,4 +1171,3 @@ require('telescope').setup({
 require('telescope').load_extension('fzf')
 require('telescope').load_extension('file_browser')
 require('telescope').load_extension('live_grep_args')
--- require('telescope').load_extension('gtags')

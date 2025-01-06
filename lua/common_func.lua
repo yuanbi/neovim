@@ -60,6 +60,7 @@ local function workspace_dir()
   return vim.g.workspace_dir_content
 end
 vim.g.workspace_dir = {get = workspace_dir}
+vim.g.workspace_dir2 = workspace_dir
 
 local function reset_workspace_dir()
   vim.g.workspace_dir_content = nil

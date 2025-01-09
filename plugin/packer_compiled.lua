@@ -90,8 +90,10 @@ _G.packer_plugins = {
     url = "https://github.com/L3MON4D3/LuaSnip"
   },
   SimpylFold = {
-    loaded = true,
-    path = "/home/byron/.local/share/nvim/site/pack/packer/start/SimpylFold",
+    loaded = false,
+    needs_bufread = true,
+    only_cond = false,
+    path = "/home/byron/.local/share/nvim/site/pack/packer/opt/SimpylFold",
     url = "https://github.com/tmhedberg/SimpylFold"
   },
   ["asyncrun.vim"] = {
@@ -99,10 +101,10 @@ _G.packer_plugins = {
     path = "/home/byron/.local/share/nvim/site/pack/packer/start/asyncrun.vim",
     url = "https://github.com/skywind3000/asyncrun.vim"
   },
-  ["autocmd-lua"] = {
+  ["auto-pairs"] = {
     loaded = true,
-    path = "/home/byron/.local/share/nvim/site/pack/packer/start/autocmd-lua",
-    url = "https://github.com/jakelinnzy/autocmd-lua"
+    path = "/home/byron/.local/share/nvim/site/pack/packer/start/auto-pairs",
+    url = "https://github.com/jiangmiao/auto-pairs"
   },
   ["avante.nvim"] = {
     config = { "\27LJ\2\n*\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\15avante_cfg\frequire\0" },
@@ -150,11 +152,6 @@ _G.packer_plugins = {
     path = "/home/byron/.local/share/nvim/site/pack/packer/opt/dashboard-nvim",
     url = "https://github.com/nvimdev/dashboard-nvim"
   },
-  delimitMate = {
-    loaded = true,
-    path = "/home/byron/.local/share/nvim/site/pack/packer/start/delimitMate",
-    url = "https://github.com/Raimondi/delimitMate"
-  },
   ["diffview.nvim"] = {
     loaded = true,
     path = "/home/byron/.local/share/nvim/site/pack/packer/start/diffview.nvim",
@@ -183,7 +180,7 @@ _G.packer_plugins = {
   },
   ["indent-blankline.nvim"] = {
     after_files = { "/home/byron/.local/share/nvim/site/pack/packer/opt/indent-blankline.nvim/after/plugin/commands.lua" },
-    config = { "\27LJ\2\nŸ\3\0\0\5\0\17\00026\0\0\0009\0\1\0009\0\2\0)\2\0\0'\3\3\0005\4\4\0B\0\4\0016\0\0\0009\0\1\0009\0\2\0)\2\0\0'\3\5\0005\4\6\0B\0\4\0016\0\0\0009\0\1\0009\0\2\0)\2\0\0'\3\a\0005\4\b\0B\0\4\0016\0\0\0009\0\1\0009\0\2\0)\2\0\0'\3\t\0005\4\n\0B\0\4\0016\0\0\0009\0\1\0009\0\2\0)\2\0\0'\3\v\0005\4\f\0B\0\4\0016\0\0\0009\0\1\0009\0\2\0)\2\0\0'\3\r\0005\4\14\0B\0\4\0016\0\0\0009\0\1\0009\0\2\0)\2\0\0'\3\15\0005\4\16\0B\0\4\1K\0\1\0\1\0\1\afg\f#56B6C2\16RainbowCyan\1\0\1\afg\f#C678DD\18RainbowViolet\1\0\1\afg\f#98C379\17RainbowGreen\1\0\1\afg\f#D19A66\18RainbowOrange\1\0\1\afg\f#61AFEF\16RainbowBlue\1\0\1\afg\f#E5C07B\18RainbowYellow\1\0\1\afg\f#E06C75\15RainbowRed\16nvim_set_hl\bapi\bvimœ\3\1\0\6\0\20\0\0305\0\0\0006\1\1\0'\3\2\0B\1\2\0029\2\3\0019\4\4\0019\4\5\0043\5\6\0B\2\3\0016\2\a\0009\2\b\0025\3\n\0=\0\v\3=\3\t\0026\2\1\0'\4\f\0B\2\2\0029\2\r\0025\4\15\0005\5\14\0=\0\v\5=\5\16\4B\2\2\0019\2\3\0019\4\4\0019\4\17\0049\5\18\0019\5\19\5B\2\3\1K\0\1\0!scope_highlight_from_extmark\fbuiltin\20SCOPE_HIGHLIGHT\nscope\1\0\1\nscope\0\1\0\1\14highlight\0\nsetup\bibl\14highlight\1\0\1\14highlight\0\23rainbow_delimiters\6g\bvim\0\20HIGHLIGHT_SETUP\ttype\rregister\14ibl.hooks\frequire\1\b\0\0\15RainbowRed\18RainbowYellow\16RainbowBlue\18RainbowOrange\17RainbowGreen\18RainbowViolet\16RainbowCyan\0" },
+    config = { "\27LJ\2\n1\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\bibl\frequire\0" },
     loaded = false,
     needs_bufread = true,
     only_cond = false,
@@ -200,6 +197,11 @@ _G.packer_plugins = {
     path = "/home/byron/.local/share/nvim/site/pack/packer/start/lush.nvim",
     url = "https://github.com/rktjmp/lush.nvim"
   },
+  ["neovim-session-manager"] = {
+    loaded = true,
+    path = "/home/byron/.local/share/nvim/site/pack/packer/start/neovim-session-manager",
+    url = "https://github.com/Shatur/neovim-session-manager"
+  },
   ["nui.nvim"] = {
     loaded = true,
     path = "/home/byron/.local/share/nvim/site/pack/packer/start/nui.nvim",
@@ -214,6 +216,12 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/byron/.local/share/nvim/site/pack/packer/start/nvim-cmp",
     url = "https://github.com/hrsh7th/nvim-cmp"
+  },
+  ["nvim-cursorline"] = {
+    config = { "\27LJ\2\nÕ\1\0\0\5\0\n\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\4\0005\3\3\0=\3\5\0025\3\6\0005\4\a\0=\4\b\3=\3\t\2B\0\2\1K\0\1\0\15cursorword\ahl\1\0\1\14underline\2\1\0\3\venable\2\ahl\0\15min_length\3\3\15cursorline\1\0\2\15cursorword\0\15cursorline\0\1\0\3\venable\1\ftimeout\3ð\1\vnumber\1\nsetup\20nvim-cursorline\frequire\0" },
+    loaded = true,
+    path = "/home/byron/.local/share/nvim/site/pack/packer/start/nvim-cursorline",
+    url = "https://github.com/yamatsum/nvim-cursorline"
   },
   ["nvim-dap"] = {
     loaded = false,
@@ -280,11 +288,6 @@ _G.packer_plugins = {
     path = "/home/byron/.local/share/nvim/site/pack/packer/opt/render-markdown.nvim",
     url = "https://github.com/MeanderingProgrammer/render-markdown.nvim"
   },
-  ["space-vim-theme"] = {
-    loaded = true,
-    path = "/home/byron/.local/share/nvim/site/pack/packer/start/space-vim-theme",
-    url = "https://github.com/liuchengxu/space-vim-theme"
-  },
   tagbar = {
     loaded = true,
     path = "/home/byron/.local/share/nvim/site/pack/packer/start/tagbar",
@@ -325,16 +328,6 @@ _G.packer_plugins = {
     path = "/home/byron/.local/share/nvim/site/pack/packer/start/vim-bookmarks",
     url = "https://github.com/MattesGroeger/vim-bookmarks"
   },
-  ["vim-clang-format"] = {
-    loaded = true,
-    path = "/home/byron/.local/share/nvim/site/pack/packer/start/vim-clang-format",
-    url = "https://github.com/rhysd/vim-clang-format"
-  },
-  ["vim-cursorword"] = {
-    loaded = true,
-    path = "/home/byron/.local/share/nvim/site/pack/packer/start/vim-cursorword",
-    url = "https://github.com/itchyny/vim-cursorword"
-  },
   ["vim-fugitive"] = {
     loaded = true,
     path = "/home/byron/.local/share/nvim/site/pack/packer/start/vim-fugitive",
@@ -350,10 +343,10 @@ _G.packer_plugins = {
     path = "/home/byron/.local/share/nvim/site/pack/packer/start/vim-mark",
     url = "https://github.com/inkarkat/vim-mark"
   },
-  ["vim-polyglot"] = {
+  ["vim-matchup"] = {
     loaded = true,
-    path = "/home/byron/.local/share/nvim/site/pack/packer/start/vim-polyglot",
-    url = "https://github.com/sheerun/vim-polyglot"
+    path = "/home/byron/.local/share/nvim/site/pack/packer/start/vim-matchup",
+    url = "https://github.com/andymass/vim-matchup"
   },
   ["vim-sensible"] = {
     loaded = true,
@@ -363,6 +356,10 @@ _G.packer_plugins = {
 }
 
 time([[Defining packer_plugins]], false)
+-- Config for: nvim-cursorline
+time([[Config for nvim-cursorline]], true)
+try_loadstring("\27LJ\2\nÕ\1\0\0\5\0\n\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\4\0005\3\3\0=\3\5\0025\3\6\0005\4\a\0=\4\b\3=\3\t\2B\0\2\1K\0\1\0\15cursorword\ahl\1\0\1\14underline\2\1\0\3\venable\2\ahl\0\15min_length\3\3\15cursorline\1\0\2\15cursorword\0\15cursorline\0\1\0\3\venable\1\ftimeout\3ð\1\vnumber\1\nsetup\20nvim-cursorline\frequire\0", "config", "nvim-cursorline")
+time([[Config for nvim-cursorline]], false)
 -- Config for: gitsigns.nvim
 time([[Config for gitsigns.nvim]], true)
 try_loadstring("\27LJ\2\n6\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\rgitsigns\frequire\0", "config", "gitsigns.nvim")
@@ -372,13 +369,14 @@ vim.cmd [[au!]]
   -- Filetype lazy-loads
 time([[Defining lazy-load filetype autocommands]], true)
 vim.cmd [[au FileType Avante ++once lua require("packer.load")({'render-markdown.nvim'}, { ft = "Avante" }, _G.packer_plugins)]]
+vim.cmd [[au FileType python ++once lua require("packer.load")({'SimpylFold'}, { ft = "python" }, _G.packer_plugins)]]
 vim.cmd [[au FileType markdown ++once lua require("packer.load")({'render-markdown.nvim'}, { ft = "markdown" }, _G.packer_plugins)]]
 time([[Defining lazy-load filetype autocommands]], false)
   -- Event lazy-loads
 time([[Defining lazy-load event autocommands]], true)
-vim.cmd [[au VimEnter * ++once lua require("packer.load")({'dashboard-nvim'}, { event = "VimEnter *" }, _G.packer_plugins)]]
+vim.cmd [[au BufRead * ++once lua require("packer.load")({'avante.nvim', 'nvim-dap', 'indent-blankline.nvim'}, { event = "BufRead *" }, _G.packer_plugins)]]
 vim.cmd [[au BufNewFile * ++once lua require("packer.load")({'avante.nvim', 'nvim-dap'}, { event = "BufNewFile *" }, _G.packer_plugins)]]
-vim.cmd [[au BufRead * ++once lua require("packer.load")({'indent-blankline.nvim', 'avante.nvim', 'nvim-dap'}, { event = "BufRead *" }, _G.packer_plugins)]]
+vim.cmd [[au VimEnter * ++once lua require("packer.load")({'dashboard-nvim'}, { event = "VimEnter *" }, _G.packer_plugins)]]
 time([[Defining lazy-load event autocommands]], false)
 vim.cmd("augroup END")
 

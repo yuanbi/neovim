@@ -87,22 +87,34 @@ local function generate_ctags()
     -- 获取当前打开的文件类型
     local filetype = vim.bo.filetype
 
-    -- 检查当前打开的文件是否是 python、cpp、c、lua 或 go 文件
-    local is_supported_file = filetype == "python" or
-                              filetype == "cpp" or
-                              filetype == "c" or
-                              filetype == "lua" or
-                              filetype == "go" or
-                              filetype == "java" or
-                              filetype == "javascript" or
-                              filetype == "assembly"
+        -- 使用 glob 查找当前目录下的 .cpp 和 .py 文件
+    local cpp_files = vim.fn.glob(current_dir .. '/*.cpp', false, true)
+    local py_files = vim.fn.glob(current_dir .. '/*.py', false, true)
+    local go_files = vim.fn.glob(current_dir .. '/*.go', false, true)
+    local js_files = vim.fn.glob(current_dir .. '/*.js', false, true)
+    local java_files = vim.fn.glob(current_dir .. '/*.java', false, true)
+
+    -- -- 检查当前打开的文件是否是 python、cpp、c、lua 或 go 文件
+    -- local is_supported_file = filetype == "python" or
+    --                           filetype == "cpp" or
+    --                           filetype == "c" or
+    --                           filetype == "lua" or
+    --                           filetype == "go" or
+    --                           filetype == "java" or
+    --                           filetype == "javascript" or
+    --                           filetype == "assembly"
 
     -- 如果满足条件，则生成 ctags
-    if has_cmake or has_makefile or has_specific_dirs or is_supported_file then
+    -- if has_cmake or has_makefile or has_specific_dirs or is_supported_file then
+    if has_cmake or has_makefile or has_specific_dirs or #cpp_files > 0 or #py_files > 0 or #js_files > 0 or #java_files > 0 then
         -- 过滤掉不需要的目录
         local exclude_dirs = " --exclude=.venv --exclude=.vs --exclude=.venv_wsl --exclude=.vscode --exclude=.git" ..
         " --exclude=build --exclude=out --exclude='*.txt' --exclude='*.json' --exclude='*.md' --exclude='.cache'"
         local ctags_cmd = string.format("ctags -R %s -f %s/tags %s", exclude_dirs, current_dir, current_dir)
+
+        if vim.fn.filereadable(current_dir .. '/tags') == 1 then
+            os.remove(current_dir .. '/tags')
+        end
 
         -- 执行 ctags 命令
         vim.o.tags = current_dir .. '/tags'
@@ -111,7 +123,7 @@ local function generate_ctags()
               if code == 0 then
                   print("ctags generated in " .. current_dir .. '/tags')
               else
-                  print("ctags generat with exit code: " .. code)
+                  print("ctags exit code: " .. code)
               end
             end)
     else
@@ -139,3 +151,61 @@ local function live_grep_args_with_quotes()
     })
 end
 vim.g.live_grep_args_with_quotes = {get = live_grep_args_with_quotes}
+
+-- 切换 NvimTree
+local function toggle_nvimtree()
+  local nvim_tree = require("nvim-tree.api").tree
+  local is_nvim_tree_open = nvim_tree.is_visible()  -- 检测 NvimTree 是否打开
+
+  -- 检测 TagBar 是否打开
+  local is_tagbar_open = false
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    if vim.api.nvim_buf_get_option(buf, "filetype") == "tagbar" then
+      is_tagbar_open = true
+      break
+    end
+  end
+
+  -- 如果 NvimTree 打开，则关闭它
+  if is_nvim_tree_open then
+    nvim_tree.toggle()
+  else
+    -- 如果 TagBar 打开，则关闭它
+    if is_tagbar_open then
+      vim.cmd("TagbarClose")
+    end
+    -- 打开 NvimTree
+    nvim_tree.toggle()
+  end
+end
+vim.g.toggle_nvimtree = toggle_nvimtree
+
+-- 切换 TagBar
+local function toggle_tagbar()
+  local nvim_tree = require("nvim-tree.api").tree
+  local is_nvim_tree_open = nvim_tree.is_visible()  -- 检测 NvimTree 是否打开
+
+  -- 检测 TagBar 是否打开
+  local is_tagbar_open = false
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    if vim.api.nvim_buf_get_option(buf, "filetype") == "tagbar" then
+      is_tagbar_open = true
+      break
+    end
+  end
+
+  -- 如果 TagBar 打开，则关闭它
+  if is_tagbar_open then
+    vim.cmd("TagbarClose")
+  else
+    -- 如果 NvimTree 打开，则关闭它
+    if is_nvim_tree_open then
+      nvim_tree.toggle()
+    end
+    -- 打开 TagBar
+    vim.cmd("TagbarOpen")
+  end
+end
+vim.g.toggle_tagbar = toggle_tagbar

@@ -42,14 +42,15 @@ function build_project(compile_command)
             print("Created build directory: " .. build_dir)
         end
 
+        local cmake_pam = '-DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS="${CMAKE_C_FLAGS} -g -gdwarf-4" -DCMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS} -g -gdwarf-4"'
         -- 在 Fterm 中执行 cmake 命令
-        cmd = "cd " .. build_dir .. " && cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .."
+        cmd = "cd " .. build_dir .. " && cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .."
         if compile_command == true then
-          cmd = "cd " .. build_dir .. " && cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .. && make"
+          cmd = "cd " .. build_dir .. " && cmake " .. cmake_pam .. " -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .. && make"
           -- fterm.run(cmd)
           vim.cmd("AsyncRun " .. cmd)
         else
-          cmd = "cd " .. build_dir .. " && cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .."
+          cmd = "cd " .. build_dir .. " && cmake " .. cmake_pam .. " -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .."
           vim.cmd("AsyncRun " .. cmd)
         end
 
@@ -116,21 +117,8 @@ vim.api.nvim_create_autocmd('BufEnter', { -- 自动添加工作区
   end,
 })
 
--- 启动时自动打开 nvim-tree
-vim.api.nvim_create_autocmd('VimEnter', {
-  pattern = '*',
-  callback = function()
-    -- 如果启动时没有指定文件，则打开 nvim-tree
-    if vim.fn.argc() == 0 then
-      -- vim.cmd('NvimTreeOpen')
-      -- vim.cmd('Startify')
-    end
-  end,
-})
-
 -- CPP 文件启用:
 --  调试
---  AI
 --  构建
 vim.api.nvim_create_autocmd("BufEnter", {
     pattern = { "*.h", "*.hpp", "*.cxx", "*.c", "*.cpp" }, -- 匹配的文件类型
@@ -156,4 +144,12 @@ augroup GenerateCtags
     autocmd!
     autocmd VimEnter * lua vim.g.generate_ctags.get()
 augroup END
+]])
+
+-- 当只剩下 NvimTree 窗口时，自动退出
+vim.cmd([[
+  augroup NvimTreeWindowSize
+    autocmd!
+    autocmd WinEnter * if winnr('$') == 1 && &filetype == 'NvimTree' | quit | endif
+  augroup END
 ]])

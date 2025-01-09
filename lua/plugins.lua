@@ -73,6 +73,29 @@ require('packer').startup(function(use)
   -- 有意思的是，packer可以用自己管理自己。
 	use 'wbthomason/packer.nvim'
 
+    use 'andymass/vim-matchup' --
+
+    use {
+      'yamatsum/nvim-cursorline', -- 高亮光标下内容和行
+      config = function()
+        require('nvim-cursorline').setup {
+          cursorline = {
+            enable = false,
+            timeout = 240,
+            number = false,
+          },
+          cursorword = {
+            enable = true,
+            min_length = 3,
+            hl = { underline = true },
+          }
+        }
+      end
+
+    }
+
+    use 'jiangmiao/auto-pairs' -- 自动括号
+
     use {
         "ellisonleao/gruvbox.nvim",
         requires = {"rktjmp/lush.nvim"}
@@ -85,7 +108,7 @@ require('packer').startup(function(use)
 
 	use { 'kyazdani42/nvim-web-devicons' }
 	use 'tpope/vim-sensible'
-	use 'sheerun/vim-polyglot' -- 高亮配置
+	-- use 'sheerun/vim-polyglot' -- 高亮配置
     -- use 'mhinz/vim-startify' -- 启动窗口
     use {
       'nvimdev/dashboard-nvim',
@@ -98,25 +121,36 @@ require('packer').startup(function(use)
     }
 
     --
-    use 'majutsushi/tagbar' -- 类窗口
-	use 'inkarkat/vim-mark' -- 高亮
-	use 'inkarkat/vim-ingo-library'
+    use {
+      'majutsushi/tagbar', -- 类窗口
+    }
+
+	use {
+      'inkarkat/vim-mark', -- 高亮
+      -- event='BufRead',
+    }
+
+	use 'inkarkat/vim-ingo-library' -- 通用函数库
 	use 'morhetz/gruvbox' -- 主题
     use 'numToStr/Comment.nvim' -- 注释插件
 	use 'MattesGroeger/vim-bookmarks' -- 书签
 	use 'skywind3000/asyncrun.vim' -- 异步执行命令插件
-	use 'rhysd/vim-clang-format' -- ,{ 'for': ['cpp','c','h']  }
-	use 'Raimondi/delimitMate' -- 自动补全插件 () {} ......
-	use 'liuchengxu/space-vim-theme'
-	use 'tmhedberg/SimpylFold' -- 代码折叠
-	use 'itchyny/vim-cursorword' -- 高亮光标下单词
-	use 'jakelinnzy/autocmd-lua' -- vim cmd 提示
+	-- use 'rhysd/vim-clang-format' -- ,{ 'for': ['cpp','c','h']  }
+	-- use 'Raimondi/delimitMate' -- 自动补全插件 () {} ......
+
+	use {
+      'tmhedberg/SimpylFold', -- 代码折叠
+      ft = {'python'},
+    }
+
+	-- use 'itchyny/vim-cursorword' -- 高亮光标下单词
     use {'akinsho/bufferline.nvim', tag = "v4.*", requires = 'kyazdani42/nvim-web-devicons'}
     use {
         'nvim-treesitter/nvim-treesitter',      -- 语法高亮
         run = function() require('nvim-treesitter.install').update({ with_sync = true }) end,
     }
-    use "numToStr/FTerm.nvim"
+    use "numToStr/FTerm.nvim" -- 弹出式终端
+
     use "sindrets/diffview.nvim" -- GIT DIFF MERGE WINDOW
     use 'tpope/vim-fugitive' --  Git 插件 :G status<CR> :G ..<CR>
     use {
@@ -130,32 +164,7 @@ require('packer').startup(function(use)
       "lukas-reineke/indent-blankline.nvim",
       event = "BufRead",
       config = function()
-        local highlight = {
-            "RainbowRed",
-            "RainbowYellow",
-            "RainbowBlue",
-            "RainbowOrange",
-            "RainbowGreen",
-            "RainbowViolet",
-            "RainbowCyan",
-        }
-        local hooks = require "ibl.hooks"
-        -- create the highlight groups in the highlight setup hook, so they are reset
-        -- every time the colorscheme changes
-        hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
-            vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
-            vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
-            vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
-            vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
-            vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
-            vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
-            vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
-        end)
-
-        vim.g.rainbow_delimiters = { highlight = highlight }
-        require("ibl").setup { scope = { highlight = highlight } }
-
-        hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
+        require("ibl").setup()
       end
     }
 
@@ -171,20 +180,23 @@ require('packer').startup(function(use)
     use 'saadparwaiz1/cmp_luasnip'    -- 代码片段补全源
     use 'jose-elias-alvarez/null-ls.nvim' -- 代码格式化插件
 
-    use {
-      'nvim-telescope/telescope.nvim',
-      requires = { 'nvim-lua/plenary.nvim' },
-    }
     -- 安装 Telescope 插件
     use {
-     'nvim-telescope/telescope-fzf-native.nvim',  -- 提供更快的模糊查找
-      run = 'make',  -- 需要编译
+      'nvim-telescope/telescope.nvim',
       requires = {
-        'nvim-telescope/telescope-file-browser.nvim',  -- 文件浏览器
-        'nvim-telescope/telescope-live-grep-args.nvim',  -- 增强 live_grep
-        'nvim-telescope/telescope-ui-select.nvim',  -- 增强 UI 选择
+        'nvim-lua/plenary.nvim',
+          use {
+           'nvim-telescope/telescope-fzf-native.nvim',  -- 提供更快的模糊查找
+            run = 'make',  -- 需要编译
+            requires = {
+              'nvim-telescope/telescope-file-browser.nvim',  -- 文件浏览器
+              'nvim-telescope/telescope-live-grep-args.nvim',  -- 增强 live_grep
+              'nvim-telescope/telescope-ui-select.nvim',  -- 增强 UI 选择
+            },
+          }
       },
     }
+
 
     -- 调试插件
     use {
@@ -207,6 +219,12 @@ require('packer').startup(function(use)
         'nvim-lua/plenary.nvim', -- 依赖插件
         'mfussenegger/nvim-dap',  -- 调试支持
       },
+    }
+
+    -- 会话保存与恢复
+    use {
+      'Shatur/neovim-session-manager',
+      requires = { 'nvim-lua/plenary.nvim' }
     }
 
     ------------------------------------------
@@ -318,41 +336,43 @@ require('lualine').setup {
 ------------------------------------------
 ----     bufferline 语法高亮配置      ----
 ------------------------------------------
-require("bufferline").setup{
-  options ={
-    mode = "buffers",
-    numbers = "ordinal",
-    separator_style = 'slant',
-    show_close_icon = false,
-    show_buffer_close_icons = false,
-    show_buffer_icons = false,
-    -- indicator_icon = '➡️',
-    indicator = { icon = ' ●'},
-    buffer_close_icon = '',
-    modified_icon = '[+]',
-    close_icon = '',
-    left_trunc_marker = '',
-    right_trunc_marker = '',
-    diagnostics = "nvim_lsp",  -- 使用 nvim-lsp 提供的诊断信息
-    diagnostics_indicator = function(count, level, diagnostics_dict, context)
-      local icon = level:match("error") and " " or " "  -- 设置错误和警告的图标
-      return icon .. count  -- 显示图标和数量
-    end,
-    custom_filter = function(bufnr)
-      local buftype = vim.api.nvim_buf_get_option(bufnr, 'buftype')
-      -- local ret = true
-      -- if buftype == 'quickfix' then
-      --   ret = false
-      -- elseif buftype == '' then
-      --   vim.cmd(':Startify')
-      --   ret = false
-      -- end
-      -- return ret
-      return buftype ~= 'quickfix'  -- 过滤掉 Quickfix 窗口
-    end,
-    -- show_tab_indicators = false
+vim.schedule(function()
+  require("bufferline").setup{
+    options = {
+      mode = "buffers",
+      numbers = "ordinal",
+      separator_style = 'slant',
+      show_close_icon = false,
+      show_buffer_close_icons = false,
+      show_buffer_icons = false,
+      -- indicator_icon = '➡️',
+      indicator = { icon = ' ●'},
+      buffer_close_icon = '',
+      modified_icon = '[+]',
+      close_icon = '',
+      left_trunc_marker = '',
+      right_trunc_marker = '',
+      diagnostics = "nvim_lsp",  -- 使用 nvim-lsp 提供的诊断信息
+      diagnostics_indicator = function(count, level, diagnostics_dict, context)
+        local icon = level:match("error") and " " or " "  -- 设置错误和警告的图标
+        return icon .. count  -- 显示图标和数量
+      end,
+      custom_filter = function(bufnr)
+        local buftype = vim.api.nvim_buf_get_option(bufnr, 'buftype')
+        -- local ret = true
+        -- if buftype == 'quickfix' then
+        --   ret = false
+        -- elseif buftype == '' then
+        --   vim.cmd(':Startify')
+        --   ret = false
+        -- end
+        -- return ret
+        return buftype ~= 'quickfix'  -- 过滤掉 Quickfix 窗口
+      end,
+      -- show_tab_indicators = false
+    }
   }
-}
+end)
 
 --require('luatab').setup{}
 
@@ -368,45 +388,47 @@ vim.api.nvim_create_autocmd({'BufEnter','BufAdd','BufNew','BufNewFile','BufWinEn
   end
 })
 
-require'nvim-treesitter.configs'.setup {
-  -- A list of parser names, or "all"
-  ensure_installed = { "c", "lua", "python", "cpp" , "markdown", "vim", "sql", 'json', 'xml'} ,
-  --ensure_installed = { "c", "lua", "python", "cpp" , "markdown", "vim", "sql", "yaml", 
-  --"bash", "cmake", "json", "javascript", "java", "kotlin", "llvm", "make", "qmljs"},
+vim.schedule(function()
+  require'nvim-treesitter.configs'.setup {
+    -- A list of parser names, or "all"
+    ensure_installed = { "c", "lua", "python", "cpp" , "markdown", "vim", "sql", 'json', 'xml'} ,
+    --ensure_installed = { "c", "lua", "python", "cpp" , "markdown", "vim", "sql", "yaml", 
+    --"bash", "cmake", "json", "javascript", "java", "kotlin", "llvm", "make", "qmljs"},
 
-  -- Install parsers synchronously (only applied to `ensure_installed`)
-  sync_install = true,
+    -- Install parsers synchronously (only applied to `ensure_installed`)
+    sync_install = true,
 
-  -- Automatically install missing parsers when entering buffer
-  auto_install = true,
+    -- Automatically install missing parsers when entering buffer
+    auto_install = true,
 
-  -- List of parsers to ignore installing (for "all")
-  ignore_install = { "vimdoc" },
+    -- List of parsers to ignore installing (for "all")
+    ignore_install = { "vimdoc" },
 
-  highlight = {
-    -- `false` will disable the whole extension
-    enable = true,
+    highlight = {
+      -- `false` will disable the whole extension
+      enable = true,
 
-    -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
-    -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
-    -- the name of the parser)
-    -- list of language that will be disabled
-    disable = { "vimdoc" },
+      -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
+      -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
+      -- the name of the parser)
+      -- list of language that will be disabled
+      disable = { "vimdoc" },
 
-    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-    -- Instead of true it can also be a list of languages
-    additional_vim_regex_highlighting = false,
-  },
-}
+      -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+      -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+      -- Using this option may slow down your editor, and you may see some duplicate highlights.
+      -- Instead of true it can also be a list of languages
+      additional_vim_regex_highlighting = false,
+    },
+  }
+end)
 
 -----------------------------------
 ---- VIM MARK 高亮数量限制解除 ----
 -----------------------------------
 --
+vim.g.mw_no_mappings = 1
 vim.g.mwDefaultHighlightingPalette='maximum'
-
 
 -----------------------------------
 ---- 弹出式终端，GIT对比窗口   ----
@@ -793,7 +815,7 @@ end
 
 -- C++ 配置 (clangd)
 lspconfig.clangd.setup({
-  cmd = { "clangd", "--background-index", "--clang-tidy" },
+  cmd = { "clangd", "--background-index=true", "--clang-tidy" },
   cmd = { "clangd", "--compile-commands-dir=build" }, -- 指定 compile_commands.json 所在目录
   filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto", "hpp", "cxx" },
   on_attach = function(client, bufnr)
@@ -816,6 +838,46 @@ lspconfig.clangd.setup({
     keymap(bufnr, 'n', '<leader>hs', '<cmd>lua switch_file_and_search()<CR>', opts)
   end,
 })
+
+-- cmp = require('nvim-cmp')
+-- cmp.setup({
+--   -- snippet = {
+--   --   expand = function(args)
+--   --     luasnip.lsp_expand(args.body)
+--   --   end,
+--   -- },
+--   -- mapping = cmp.mapping.preset.insert({
+--   --   ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+--   --   ['<C-f>'] = cmp.mapping.scroll_docs(4),
+--   --   ['<C-Space>'] = cmp.mapping.complete(),
+--   --   ['<C-e>'] = cmp.mapping.abort(),
+--   --   ['<CR>'] = cmp.mapping.confirm({ select = true }), -- 回车确认补全
+--   --   ['<Tab>'] = cmp.mapping(function(fallback)
+--   --     if cmp.visible() then
+--   --       cmp.select_next_item()
+--   --     elseif luasnip.expand_or_jumpable() then
+--   --       luasnip.expand_or_jump()
+--   --     else
+--   --       fallback()
+--   --     end
+--   --   end, { 'i', 's' }),
+--   --   ['<S-Tab>'] = cmp.mapping(function(fallback)
+--   --     if cmp.visible() then
+--   --       cmp.select_prev_item()
+--   --     elseif luasnip.jumpable(-1) then
+--   --       luasnip.jump(-1)
+--   --     else
+--   --       fallback()
+--   --     end
+--   --   end, { 'i', 's' }),
+--   -- }),
+--   sources = cmp.config.sources({
+--     { name = 'nvim_lsp' }, -- LSP 补全源
+--     -- { name = 'luasnip' }, -- 代码片段补全源
+--     { name = 'buffer' }, -- 缓冲区补全源
+--     { name = 'path' }, -- 路径补全源
+--   }),
+-- })
 
 
 ------------------------------------------------------------------------------------------
@@ -887,9 +949,9 @@ vim.diagnostic.config({
 local cmp = require'cmp'
 cmp.setup({
   snippet = {
-    expand = function(args)
-      require('luasnip').lsp_expand(args.body) -- 使用 LuaSnip 作为代码片段引擎
-    end,
+    -- expand = function(args)
+      -- require('luasnip').lsp_expand(args.body) -- 使用 LuaSnip 作为代码片段引擎
+    -- end,
   },
   mapping = {
     ['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }), -- 向下选择
@@ -899,9 +961,9 @@ cmp.setup({
   },
   sources = cmp.config.sources({
     { name = 'nvim_lsp' }, -- 从 LSP 获取补全项
-    { name = 'luasnip' },  -- 支持代码片段
-  }, {
+    -- { name = 'luasnip' },  -- 支持代码片段
     { name = 'buffer' }, -- 从当前缓冲区获取补全项
+    { name = 'path' },
   }),
   -- 模仿 VS2022，自动弹出补全列表
   completion = {
@@ -916,6 +978,9 @@ cmp.setup({
 -- nvim-tree 配置 
 ------------------------------------------------------------------------------------------
 require("nvim-tree").setup({
+  update_focused_file = {
+    enable = false,  -- 打开文件时不要聚焦到 nvim-tree
+  },
   -- 禁用 netrw（Neovim 的默认文件浏览器）
   disable_netrw = true,
   hijack_netrw = true,
@@ -958,8 +1023,8 @@ require("nvim-tree").setup({
   },
     -- 视图设置
   view = {
-    width = 36,
-    side = 'right',
+    width = 40,
+    side = 'left',
   --   mappings = {
   --     custom_only = false,  -- 是否只使用自定义映射
   --     list = {
@@ -989,12 +1054,20 @@ require("nvim-tree").setup({
 ------------------------------------------------------------------------------------------
 require('gitsigns').setup({
   signs = {
-    add          = { text = '+' }, -- 新增
-    change       = { text = '~' }, -- 修改
-    delete       = { text = 'x' }, -- 删除
-    topdelete    = { text = '^' }, -- 顶部删除
-    changedelete = { text = '!' }, -- 修改并删除
-    untracked    = { text = '?' }, -- 未跟踪
+
+    add          = { text = 'G+' }, -- 新增
+    change       = { text = 'G~' }, -- 修改
+    delete       = { text = 'G-' }, -- 删除
+    topdelete    = { text = 'G▔' }, -- 顶部删除
+    changedelete = { text = 'G!' }, -- 修改并删除
+    untracked    = { text = 'G?' }, -- 未跟踪
+
+    -- add          = { text = 'g+' }, -- 新增
+    -- change       = { text = 'g~' }, -- 修改
+    -- delete       = { text = 'g✗' }, -- 删除
+    -- topdelete    = { text = 'g^' }, -- 顶部删除
+    -- changedelete = { text = 'g!' }, -- 修改并删除
+    -- untracked    = { text = 'g?' }, -- 未跟踪
 
     -- add          = { text = '🆕' }, -- 新增
     -- change       = { text = '📝' }, -- 修改
@@ -1020,9 +1093,9 @@ require('gitsigns').setup({
     ignore_whitespace = false,
   },
   -- sign_priority = 6, -- Git 状态符号的优先级
-  update_debounce = 100, -- 更新防抖时间（毫秒）
+  update_debounce = 1000, -- 更新防抖时间（毫秒）
   status_formatter = nil, -- 使用默认的状态格式化函数
-  max_file_length = 40000, -- 最大文件长度（行数）
+  max_file_length = 4000, -- 最大文件长度（行数）
   preview_config = {
     border = 'single', -- 预览窗口的边框样式
     style = 'minimal', -- 预览窗口的样式
@@ -1127,6 +1200,18 @@ require('telescope').setup({
     -- },
     layout_strategy = "horizontal",  -- 使用垂直布局
     sorting_strategy = "ascending",
+    file_ignore_patterns = {
+      "build/",
+      "dist/",
+      "out/",
+      "tags",
+      "node_modules/",
+      "%.git/",
+      "%.vs/", 
+      "%.cache/",
+      "%.vscode/",
+      "%.github/",
+    },
     layout_config = {
       horizontal = {
         prompt_position = "top",     -- 搜索框在顶部
@@ -1171,3 +1256,17 @@ require('telescope').setup({
 require('telescope').load_extension('fzf')
 require('telescope').load_extension('file_browser')
 require('telescope').load_extension('live_grep_args')
+
+------------------------------------------------------------------------------------------
+-- session_manager 配置 
+------------------------------------------------------------------------------------------
+require('session_manager').setup {
+  sessions_dir = require('plenary.path'):new(vim.fn.stdpath('data'), 'sessions'), -- 会话保存目录
+  path_replacer = '__', -- 替换路径中的目录分隔符
+  colon_replacer = '++', -- 替换路径中的冒号
+  autoload_mode = require('session_manager.config').AutoloadMode.Disabled, -- 自动加载模式
+  -- autoload_mode = false, -- 自动加载模式
+  autosave_last_session = true, -- 自动保存最后会话
+  autosave_ignore_not_normal = true, -- 忽略非正常缓冲区的自动保存
+  autosave_only_in_session = false, -- 仅在会话中自动保存
+}

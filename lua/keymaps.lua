@@ -65,6 +65,7 @@ end
 nmap('<Space>', '<nop>')
 vmap('<Space>', '<nop>')
 xmap('<Space>', '<nop>')
+imap('<C-k>', '<Esc>')
 
 ------------------------------------------------------------------------------------------
 -- Telescope 映射
@@ -203,14 +204,14 @@ nmap('gks', ':Gitsigns stage_hunk<CR>')
 -- 文件窗口 nvim-tree
 ------------------------------------------------------------------------------------------
 --
-nmap('<F3>', ':NvimTreeToggle<CR>')
+nmap('<F3>', ':lua vim.g.toggle_nvimtree()<CR>')
 -- nmap('<leader>fl', ':NvimTreeFocus<CR>')
 
 ------------------------------------------------------------------------------------------
 -- tagbar 类窗口
 ------------------------------------------------------------------------------------------
 --
-nmap('<F2>', ':TagbarToggle<CR>')
+nmap('<F2>', ':lua vim.g.toggle_tagbar()<CR>')
 
 ------------------------------------------------------------------------------------------
 -- LeaderF 配置
@@ -249,7 +250,6 @@ nmap('<F2>', ':TagbarToggle<CR>')
 -- MARK 高亮
 ------------------------------------------------------------------------------------------
 --
-vmap('<leader>n', '<Plug>MarkClear')
 nmap('<leader>m', '<Plug>MarkSet')
 nmap('<leader>N', ':MarkClear<CR>')
 ------------------------------------------------------------------------------------------
@@ -375,7 +375,7 @@ nmap('<leader>ff', ':lua vim.lsp.buf.format()<CR>')
 -- Telescope 配置
 ------------------------------------------------------------------------------------------
 nmap('<leader>sb', ':lua require("telescope.builtin").buffers()<CR>')
-nmap('<leader>sm', ':lua require("telescope.builtin").oldfiles()<CR>')
+-- nmap('<leader>sm', ':lua require("telescope.builtin").oldfiles()<CR>')
 nmap('<leader>st', ':lua require("telescope.builtin").tags({ env = { TAGS = vim.o.tags}})<CR>')
 nmap('<leader>sl', ':lua require("telescope.builtin").current_buffer_fuzzy_find()<CR>')
 nmap('<leader>sw', ':lua require("telescope").extensions.live_grep_args.live_grep_args({ cwd = vim.g.workspace_dir.get() , auto_quoting=true})<CR>')
@@ -387,3 +387,7 @@ nmap('<leader>sg', ':lua vim.g.generate_ctags.get()<CR>')
 
 -- 配置可视模式下的快捷键
 vmap('<leader>sw', ':lua require("telescope").extensions.live_grep_args.live_grep_args({ cwd = vim.g.workspace_dir.get() , default_text= vim.g.get_visual_selection.get()})<CR>')
+
+nmap('<leader>sm', ':SessionManager available_commands<CR>') -- 会话管理
+
+

@@ -7,10 +7,18 @@ require('nvim-dap-virtual-text').setup()
 
 dapui.setup()
 vim.cmd("highlight DapBreakpointText guifg=red ctermfg=red")
-vim.cmd("highlight DapRunToCusor guifg=blue ctermfg=red")
-vim.fn.sign_define('DapBreakpoint', { text = 'BP', texthl = 'DapBreakpointText', linehl = '', numhl = '' })
-vim.fn.sign_define('DapStopped', { text = '->', texthl = 'DapRunToCusor', linehl = '', numhl = '' })
+vim.cmd("highlight DapRunToCusor guifg=yellow ctermfg=yellow")
+vim.fn.sign_define('DapBreakpoint', { text = '✹', texthl = 'DapBreakpointText', linehl = '', numhl = '' })
+vim.fn.sign_define('DapStopped', { text = '➔', texthl = 'DapRunToCusor', linehl = '', numhl = '' })
+vim.fn.sign_define('DapBreakpointRejected', { text = '◉', texthl = 'DapBreakpointText', linehl = '', numhl = '' }) -- 无效断点
+vim.fn.sign_define('DapBreakpointResolved', { text = '✓>', texthl = 'DapBreakpointText', linehl = '', numhl = '' }) -- 已解析断点
 vim.g.debuger_short = false
+
+-- 定义 LSP 诊断图标
+vim.fn.sign_define('DiagnosticSignError', { text = '✗', texthl = 'DiagnosticSignError' }) -- 错误
+vim.fn.sign_define('DiagnosticSignWarn', { text = '‼', texthl = 'DiagnosticSignWarn' })   -- 警告
+vim.fn.sign_define('DiagnosticSignInfo', { text = '⬥', texthl = 'DiagnosticSignInfo' })   -- 信息
+vim.fn.sign_define('DiagnosticSignHint', { text = '★', texthl = 'DiagnosticSignHint' })   -- 提示
 
 -----------------------------------------------
 -- 全局参数
@@ -19,6 +27,63 @@ vim.g.debuger_short = false
 local tmux_split_pty = nil  -- 保存终端的设备ID
 local original_K_mapping = nil -- 保存 K 快捷键功能
 local debug_args = nil
+local g_is_tagbar_open = false
+local g_is_nvimtree_open = false
+
+
+-----------------------------------------------
+-- 保存并恢复窗口
+-----------------------------------------------
+---
+function CycleWindows()
+  -- vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-w>w', true, true, true), 'n', false)
+  return
+  -- local current_win = vim.api.nvim_get_current_win()
+  -- local windows = vim.api.nvim_list_wins()
+
+  -- -- 找到当前窗口的索引
+  -- local current_index = 1
+  -- for i, win in ipairs(windows) do
+  --   if win == current_win then
+  --     current_index = i
+  --     break
+  --   end
+  -- end
+
+  -- -- 计算下一个窗口的索引
+  -- local next_index = current_index + 1
+  -- if next_index > #windows then
+  --   next_index = 1
+  -- end
+
+  -- -- 切换到下一个窗口
+  -- vim.api.nvim_set_current_win(windows[next_index])
+end
+
+local function save_window_status()
+
+  local nvim_tree = require("nvim-tree.api").tree
+  g_is_nvimtree_open = nvim_tree.is_visible()  -- 检测 NvimTree 是否打开
+
+  g_is_tagbar_open = false
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    if vim.api.nvim_buf_get_option(buf, "filetype") == "tagbar" then
+      g_is_tagbar_open = true
+      break
+    end
+  end
+end
+
+local function restore_window()
+  if g_is_nvimtree_open == true then
+    vim.cmd('NvimTreeOpen')
+  end
+  if g_is_tagbar_open == true then
+    vim.cmd("TagbarOpen")
+    -- vim.cmd('wincmd p')
+  end
+end
 
 -----------------------------------------------------------------
 -- 配置 GDB 以将输出重定向到新建TMUX终端窗口
@@ -188,6 +253,7 @@ end
 
 function start_debug_session()
 
+  save_window_status()
   local pty = create_tmux_split_and_get_pty()
 
   -- cpp 单独设置配置项
@@ -250,6 +316,7 @@ function close_debug_session()
 
     -- 关闭 dap-ui 的界面
     dapui.close()
+    restore_window()
 end
 
 
@@ -271,6 +338,7 @@ vim.api.nvim_set_keymap('n', '<leader>dD', '<cmd>lua vim.diagnostic.goto_prev({ 
 vim.api.nvim_set_keymap('n', '<leader>dr', '<cmd>lua start_debug_session()<CR>', { noremap = true, silent = true })  -- 启动调试器
 vim.api.nvim_set_keymap('n', '<leader>dR', '<cmd>lua start_debug_session_new()<CR>', { noremap = true, silent = true }) -- 启动调试器，重新输入被调试程序的路径
 vim.api.nvim_set_keymap('n', '<leader>dk', '<cmd>lua close_debug_session()<CR>', { noremap = true, silent = true }) -- 杀死调试器
+vim.api.nvim_set_keymap('n', '<leader>dK', '<cmd>lua close_debug_session(); terminate_tmux_split_and_get_pty()<CR>', { noremap = true, silent = true }) -- 杀死调试器
 vim.api.nvim_set_keymap('n', '<leader>db', ':Telescope dap list_breakpoints<CR>', { noremap = true, silent = true }) -- 断点列表
 vim.api.nvim_set_keymap('n', '<leader>dc', ':Telescope dap commands<CR>', { noremap = true, silent = true }) -- DAP 命令列表
 vim.api.nvim_set_keymap('n', '<leader>dq', '<cmd>lua terminate_tmux_split_and_get_pty()<CR>', { noremap = true, silent = true }) -- DAP 命令列表
@@ -294,3 +362,12 @@ end
 dap.listeners.before.event_exited['dapui_config'] = function()
   close_debug_session()
 end
+
+
+-- nvim 退出自动关闭调试终端
+vim.api.nvim_create_autocmd('VimLeave', {
+  pattern = '*',
+  callback = function()
+    terminate_tmux_split_and_get_pty()
+  end,
+})

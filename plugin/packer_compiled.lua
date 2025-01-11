@@ -213,7 +213,7 @@ _G.packer_plugins = {
     url = "https://github.com/hrsh7th/nvim-cmp"
   },
   ["nvim-cursorline"] = {
-    config = { "\27LJ\2\nÕ\1\0\0\5\0\n\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\4\0005\3\3\0=\3\5\0025\3\6\0005\4\a\0=\4\b\3=\3\t\2B\0\2\1K\0\1\0\15cursorword\ahl\1\0\1\14underline\2\1\0\3\venable\2\ahl\0\15min_length\3\3\15cursorline\1\0\2\15cursorline\0\15cursorword\0\1\0\3\venable\1\vnumber\1\ftimeout\3ð\1\nsetup\20nvim-cursorline\frequire\0" },
+    config = { "\27LJ\2\nÕ\1\0\0\5\0\n\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\4\0005\3\3\0=\3\5\0025\3\6\0005\4\a\0=\4\b\3=\3\t\2B\0\2\1K\0\1\0\15cursorword\ahl\1\0\1\14underline\2\1\0\3\venable\2\ahl\0\15min_length\3\3\15cursorline\1\0\2\15cursorline\0\15cursorword\0\1\0\3\ftimeout\3ð\1\venable\1\vnumber\1\nsetup\20nvim-cursorline\frequire\0" },
     loaded = true,
     path = "/home/byron/.local/share/nvim/site/pack/packer/start/nvim-cursorline",
     url = "https://github.com/yamatsum/nvim-cursorline"
@@ -357,7 +357,7 @@ try_loadstring("\27LJ\2\n6\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K
 time([[Config for gitsigns.nvim]], false)
 -- Config for: nvim-cursorline
 time([[Config for nvim-cursorline]], true)
-try_loadstring("\27LJ\2\nÕ\1\0\0\5\0\n\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\4\0005\3\3\0=\3\5\0025\3\6\0005\4\a\0=\4\b\3=\3\t\2B\0\2\1K\0\1\0\15cursorword\ahl\1\0\1\14underline\2\1\0\3\venable\2\ahl\0\15min_length\3\3\15cursorline\1\0\2\15cursorline\0\15cursorword\0\1\0\3\venable\1\vnumber\1\ftimeout\3ð\1\nsetup\20nvim-cursorline\frequire\0", "config", "nvim-cursorline")
+try_loadstring("\27LJ\2\nÕ\1\0\0\5\0\n\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\4\0005\3\3\0=\3\5\0025\3\6\0005\4\a\0=\4\b\3=\3\t\2B\0\2\1K\0\1\0\15cursorword\ahl\1\0\1\14underline\2\1\0\3\venable\2\ahl\0\15min_length\3\3\15cursorline\1\0\2\15cursorline\0\15cursorword\0\1\0\3\ftimeout\3ð\1\venable\1\vnumber\1\nsetup\20nvim-cursorline\frequire\0", "config", "nvim-cursorline")
 time([[Config for nvim-cursorline]], false)
 vim.cmd [[augroup packer_load_aucmds]]
 vim.cmd [[au!]]
@@ -370,7 +370,7 @@ time([[Defining lazy-load filetype autocommands]], false)
   -- Event lazy-loads
 time([[Defining lazy-load event autocommands]], true)
 vim.cmd [[au VimEnter * ++once lua require("packer.load")({'dashboard-nvim'}, { event = "VimEnter *" }, _G.packer_plugins)]]
-vim.cmd [[au BufRead * ++once lua require("packer.load")({'indent-blankline.nvim', 'nvim-dap', 'avante.nvim'}, { event = "BufRead *" }, _G.packer_plugins)]]
+vim.cmd [[au BufRead * ++once lua require("packer.load")({'nvim-dap', 'avante.nvim', 'indent-blankline.nvim'}, { event = "BufRead *" }, _G.packer_plugins)]]
 vim.cmd [[au BufNewFile * ++once lua require("packer.load")({'nvim-dap', 'avante.nvim'}, { event = "BufNewFile *" }, _G.packer_plugins)]]
 time([[Defining lazy-load event autocommands]], false)
 vim.cmd("augroup END")

@@ -6,67 +6,11 @@ if fn.empty(fn.glob(install_path)) > 0 then
 end
 
 local programming_filetypes = {
-  "c",          -- C
-  "cpp",        -- C++
-  "java",       -- Java
-  "python",     -- Python
-  "javascript", -- JavaScript
-  "typescript", -- TypeScript
-  "lua",        -- Lua
-  "rust",       -- Rust
-  "go",         -- Go
-  "ruby",       -- Ruby
-  "php",        -- PHP
-  "html",       -- HTML
-  "css",        -- CSS
-  "scss",       -- SCSS
-  "json",       -- JSON
-  "yaml",       -- YAML
-  "toml",       -- TOML
-  "bash",       -- Bash
-  "sh",         -- Shell Script
-  "zsh",        -- Zsh
-  "fish",       -- Fish Shell
-  "vim",        -- Vim Script
-  "markdown",   -- Markdown
-  "tex",        -- LaTeX
-  "sql",        -- SQL
-  "dockerfile", -- Dockerfile
-  "make",       -- Makefile
-  "cmake",      -- CMake
-  "perl",       -- Perl
-  "r",          -- R
-  "swift",      -- Swift
-  "kotlin",     -- Kotlin
-  "scala",      -- Scala
-  "haskell",    -- Haskell
-  "ocaml",      -- OCaml
-  "elixir",     -- Elixir
-  "erlang",     -- Erlang
-  "clojure",    -- Clojure
-  "fsharp",     -- F#
-  "dart",       -- Dart
-  "groovy",     -- Groovy
-  "puppet",     -- Puppet
-  "terraform",  -- Terraform
-  "proto",      -- Protocol Buffers
-  "thrift",     -- Thrift
-  "graphql",    -- GraphQL
-  "vue",        -- Vue.js
-  "svelte",     -- Svelte
-  "elixir",     -- Elixir
-  "erlang",     -- Erlang
-  "clojure",    -- Clojure
-  "fsharp",     -- F#
-  "dart",       -- Dart
-  "groovy",     -- Groovy
-  "puppet",     -- Puppet
-  "terraform",  -- Terraform
-  "proto",      -- Protocol Buffers
-  "thrift",     -- Thrift
-  "graphql",    -- GraphQL
-  "vue",        -- Vue.js
-  "svelte",     -- Svelte
+  "c", "cpp", "java", "python", "javascript", "typescript", "lua", "rust", "go", "ruby", "php", 
+  "html", "css", "scss", "json", "yaml", "toml", "bash", "sh", "zsh", "fish", "vim", "markdown", 
+  "tex", "sql", "dockerfile", "make", "cmake", "perl", "r", "swift", "kotlin", "scala", "haskell", 
+  "ocaml", "elixir", "erlang", "clojure", "fsharp", "dart", "groovy", "puppet", "terraform", 
+  "proto", "thrift", "graphql", "vue", "svelte"
 },
 
 require('packer').startup(function(use)
@@ -108,8 +52,6 @@ require('packer').startup(function(use)
 
 	use { 'kyazdani42/nvim-web-devicons' }
 	use 'tpope/vim-sensible'
-	-- use 'sheerun/vim-polyglot' -- 高亮配置
-    -- use 'mhinz/vim-startify' -- 启动窗口
     use {
       'nvimdev/dashboard-nvim',
       event = 'VimEnter',
@@ -131,12 +73,14 @@ require('packer').startup(function(use)
     }
 
 	use 'inkarkat/vim-ingo-library' -- 通用函数库
-	use 'morhetz/gruvbox' -- 主题
     use 'numToStr/Comment.nvim' -- 注释插件
 	use 'MattesGroeger/vim-bookmarks' -- 书签
 	use 'skywind3000/asyncrun.vim' -- 异步执行命令插件
-	-- use 'rhysd/vim-clang-format' -- ,{ 'for': ['cpp','c','h']  }
-	-- use 'Raimondi/delimitMate' -- 自动补全插件 () {} ......
+
+    use{
+        -- 'hardhackerlabs/theme-vim', -- 主题
+        use 'morhetz/gruvbox' -- 主题
+    }
 
 	use {
       'tmhedberg/SimpylFold', -- 代码折叠
@@ -160,7 +104,7 @@ require('packer').startup(function(use)
           end
     }
 
-    use {
+    use { -- indent
       "lukas-reineke/indent-blankline.nvim",
       event = "BufRead",
       config = function()
@@ -843,12 +787,12 @@ lspconfig.clangd.setup({
     keymap(bufnr, 'n', '<leader>wf', '<cmd>lua for _, folder in ipairs(vim.lsp.buf.list_workspace_folders()) do print(folder) end<CR>', opts)
     keymap(bufnr, 'n', '<leader>hs', '<cmd>lua switch_file_and_search()<CR>', opts)
     keymap(bufnr, 'i', '<C-j>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts) -- 弹出参数提示
-    vim.api.nvim_create_autocmd('CursorHoldI', { -- 自动弹出参数提示
-        buffer = bufnr,
-        callback = function()
-            vim.lsp.buf.signature_help()
-        end
-    })
+    -- vim.api.nvim_create_autocmd('CursorHoldI', { -- 自动弹出参数提示
+    --     buffer = bufnr,
+    --     callback = function()
+    --         vim.lsp.buf.signature_help()
+    --     end
+    -- })
   end,
 })
 
@@ -1202,6 +1146,7 @@ require('cmake-tools').setup({
 ------------------------------------------------------------------------------------------
 require('telescope').setup({
   defaults = {
+      -- find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
     -- vimgrep_arguments = {
     --   "rg",  -- 使用 ripgrep
     --   "--color=never",

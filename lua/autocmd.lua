@@ -142,7 +142,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 vim.cmd([[
 augroup GenerateCtags
     autocmd!
-    autocmd VimEnter * lua vim.g.generate_ctags.get()
+    autocmd VimEnter * lua vim.schedule(function()vim.g.generate_ctags.get()end) 
 augroup END
 ]])
 
@@ -153,3 +153,15 @@ vim.cmd([[
     autocmd WinEnter * if winnr('$') == 1 && &filetype == 'NvimTree' | quit | endif
   augroup END
 ]])
+
+
+-- 选中文字加括号引号 兼容方案
+--
+vim.cmd([[
+augroup CompVirualSelectText
+    autocmd!
+    autocmd BufRead * lua vim.schedule(function()vim.api.nvim_feedkeys("vv", "n", false);end) -- 兼容选中文字首次进入vim首次选中不生效问题，进入vim即切换v模式并切换回来, for 选中文字加括号
+augroup END
+]])
+
+

@@ -127,8 +127,8 @@ vmap('L', '$')
 --xmap('L', '$')
 
 -- 批量缩进
-xmap('<', '<gv')
-xmap('>', '>gv')
+xmap('<<', '<gv')
+xmap('>>', '>gv')
 
 -- VIM 环境保存
 nmap('<leader>ss', ':mksession! lastsession.vim<cr> :wviminfo! lastsession.viminfo<cr>')
@@ -172,12 +172,12 @@ nmap('<leader>wJ', '<C-w>J')
 nmap('<leader>wo', ':only<CR>')
 
 -- 窗口尺寸调整
-nmap('<leader>w=', '<C-w>=')
-nmap('<leader>w-', '<C-w>+')
-nmap('<leader>w<', '<C-w><')
-nmap('<leader>w>', '<C-w>>')
-nmap('<leader>ws', ':vertical resize ')
-nmap('<leader>wv', ':resize ')
+-- nmap('<leader>w=', '<C-w>=')
+-- nmap('<leader>w-', '<C-w>+')
+-- nmap('<leader>w<', '<C-w><')
+-- nmap('<leader>w>', '<C-w>>')
+nmap2('<leader>ws', ':vertical resize ')
+nmap2('<leader>wv', ':resize ')
 
 -- 粘贴模式开启与关闭
 -- nmap('<leader>po', ':set paste<CR>')
@@ -391,3 +391,25 @@ vmap('<leader>sw', ':lua require("telescope").extensions.live_grep_args.live_gre
 nmap('<leader>sm', ':SessionManager available_commands<CR>') -- 会话管理
 
 
+------------------------------------------------------------------------------------------
+-- 选中文字加括号引号
+------------------------------------------------------------------------------------------
+--
+local wrappers = {
+  double_quote = { '"', '"' },
+  bracket = { '(', ')' },
+  curly_brace = { '{', '}' },
+}
+
+vim.api.nvim_set_keymap("v", '<leader>"', '', {
+  noremap = true,
+  callback = function() vim.schedule(function()vim.g.wrap_selection(wrappers.double_quote)end) end,
+})
+vim.api.nvim_set_keymap("v", '<leader>(', '', {
+  noremap = true,
+  callback = function() vim.schedule(function()vim.g.wrap_selection(wrappers.bracket)end) end,
+})
+vim.api.nvim_set_keymap("v", '<leader>{', '', {
+  noremap = true,
+  callback = function() vim.schedule(function()vim.g.wrap_selection(wrappers.curly_brace)end) end,
+})

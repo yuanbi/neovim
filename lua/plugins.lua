@@ -177,7 +177,7 @@ require('packer').startup(function(use)
     use 'hrsh7th/cmp-buffer'          -- 缓冲区补全源
     use 'hrsh7th/cmp-path'            -- 文件路径补全
     use 'L3MON4D3/LuaSnip'            -- 代码片段引擎
-    use 'saadparwaiz1/cmp_luasnip'    -- 代码片段补全源
+    -- use 'saadparwaiz1/cmp_luasnip'    -- 代码片段补全源
     use 'jose-elias-alvarez/null-ls.nvim' -- 代码格式化插件
 
     -- 安装 Telescope 插件
@@ -818,7 +818,13 @@ lspconfig.clangd.setup({
   cmd = { "clangd", "--background-index=true", "--clang-tidy" },
   cmd = { "clangd", "--compile-commands-dir=build" }, -- 指定 compile_commands.json 所在目录
   filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto", "hpp", "cxx" },
+  diagnostics = {
+    -- 设置诊断刷新延迟（单位：毫秒）
+    update_in_insert = true,  -- 在插入模式下不更新诊断
+    debounce = 300,           -- 设置诊断刷新延迟为 300 毫秒
+  },
   on_attach = function(client, bufnr)
+
     local opts = { noremap=true, silent=true }
     local keymap = vim.api.nvim_buf_set_keymap
     -- keymap(bufnr, 'n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
@@ -836,6 +842,13 @@ lspconfig.clangd.setup({
     keymap(bufnr, 'n', '<leader>fx', '<Cmd>lua vim.lsp.buf.code_action()<CR>', opts)
     keymap(bufnr, 'n', '<leader>wf', '<cmd>lua for _, folder in ipairs(vim.lsp.buf.list_workspace_folders()) do print(folder) end<CR>', opts)
     keymap(bufnr, 'n', '<leader>hs', '<cmd>lua switch_file_and_search()<CR>', opts)
+    keymap(bufnr, 'i', '<C-j>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts) -- 弹出参数提示
+    vim.api.nvim_create_autocmd('CursorHoldI', { -- 自动弹出参数提示
+        buffer = bufnr,
+        callback = function()
+            vim.lsp.buf.signature_help()
+        end
+    })
   end,
 })
 
@@ -948,11 +961,11 @@ vim.diagnostic.config({
 ------------------------------------------------------------------------------------------
 local cmp = require'cmp'
 cmp.setup({
-  snippet = {
-    -- expand = function(args)
-      -- require('luasnip').lsp_expand(args.body) -- 使用 LuaSnip 作为代码片段引擎
-    -- end,
-  },
+  -- snippet = {
+  --   -- expand = function(args)
+  --     -- require('luasnip').lsp_expand(args.body) -- 使用 LuaSnip 作为代码片段引擎
+  --   -- end,
+  -- },
   mapping = {
     ['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }), -- 向下选择
     ['<C-p>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }), -- 向上选择

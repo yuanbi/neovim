@@ -212,7 +212,7 @@ return{
   {
     "mfussenegger/nvim-dap",
     event = { "BufRead", "BufNewFile" },
-    ft = programming_filetypes,
+    ft = {'h', 'hpp', 'cpp', 'cxx'},
     dependencies = {
       "nvim-neotest/nvim-nio",
       "rcarriga/nvim-dap-ui",
@@ -220,6 +220,9 @@ return{
       "mfussenegger/nvim-dap-python",
       "nvim-telescope/telescope-dap.nvim",
     },
+    config = function()
+        require('dap_cpp')
+    end
   },
 
   -- CMAKE 插件

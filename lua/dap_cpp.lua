@@ -4,26 +4,14 @@ local dapui = require('dapui')
 
 require('telescope').load_extension('dap')
 require('nvim-dap-virtual-text').setup()
-
 dapui.setup()
-vim.cmd("highlight DapBreakpointText guifg=red ctermfg=red")
-vim.cmd("highlight DapRunToCusor guifg=yellow ctermfg=yellow")
-vim.fn.sign_define('DapBreakpoint', { text = '✹', texthl = 'DapBreakpointText', linehl = '', numhl = '' })
-vim.fn.sign_define('DapStopped', { text = '➔', texthl = 'DapRunToCusor', linehl = '', numhl = '' })
-vim.fn.sign_define('DapBreakpointRejected', { text = '◉', texthl = 'DapBreakpointText', linehl = '', numhl = '' }) -- 无效断点
-vim.fn.sign_define('DapBreakpointResolved', { text = '✓>', texthl = 'DapBreakpointText', linehl = '', numhl = '' }) -- 已解析断点
-vim.g.debuger_short = false
-
--- 定义 LSP 诊断图标
-vim.fn.sign_define('DiagnosticSignError', { text = '✗', texthl = 'DiagnosticSignError' }) -- 错误
-vim.fn.sign_define('DiagnosticSignWarn', { text = '‼', texthl = 'DiagnosticSignWarn' })   -- 警告
-vim.fn.sign_define('DiagnosticSignInfo', { text = '⬥', texthl = 'DiagnosticSignInfo' })   -- 信息
-vim.fn.sign_define('DiagnosticSignHint', { text = '★', texthl = 'DiagnosticSignHint' })   -- 提示
 
 -----------------------------------------------
 -- 全局参数
 -----------------------------------------------
 ---
+---
+vim.g.debuger_short = false
 local tmux_split_pty = nil  -- 保存终端的设备ID
 local original_K_mapping = nil -- 保存 K 快捷键功能
 local debug_args = nil
@@ -368,4 +356,27 @@ vim.api.nvim_create_autocmd('QuitPre', {
   callback = function()
     terminate_tmux_split_and_get_pty()
   end,
+})
+
+-- 定义 LSP 诊断图标
+vim.api.nvim_create_autocmd('BufEnter', {
+  pattern = '*',
+  once = true,
+  callback = function()
+
+    vim.cmd("highlight clear DapBreakpointText")
+    vim.cmd("highlight clear DapRunToCusor")
+    vim.cmd("highlight DapRunToCusor guifg=yellow ctermfg=yellow")
+    vim.cmd("highlight DapBreakpointText guifg=red ctermfg=red")
+
+    vim.fn.sign_define('DiagnosticSignError', { text = '✗', texthl = 'DiagnosticSignError' }) -- 错误
+    vim.fn.sign_define('DiagnosticSignWarn', { text = '‼', texthl = 'DiagnosticSignWarn' })   -- 警告
+    vim.fn.sign_define('DiagnosticSignInfo', { text = '⬥', texthl = 'DiagnosticSignInfo' })   -- 信息
+    vim.fn.sign_define('DiagnosticSignHint', { text = '★', texthl = 'DiagnosticSignHint' })   -- 提示
+
+    vim.fn.sign_define('DapBreakpoint', { text = '✹', texthl = 'DapBreakpointText', linehl = '', numhl = '' })
+    vim.fn.sign_define('DapStopped', { text = '➔', texthl = 'DapRunToCusor', linehl = '', numhl = '' })
+    vim.fn.sign_define('DapBreakpointRejected', { text = '◉', texthl = 'DapBreakpointText', linehl = '', numhl = '' }) -- 无效断点
+    vim.fn.sign_define('DapBreakpointResolved', { text = '✓>', texthl = 'DapBreakpointText', linehl = '', numhl = '' }) -- 已解析断点
+    end
 })

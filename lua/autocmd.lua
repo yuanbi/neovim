@@ -125,18 +125,8 @@ vim.api.nvim_create_autocmd("BufEnter", {
     callback = function()
         vim.keymap.set("n", "<leader>wbd", build_project_bin, { noremap = true, silent = true, buffer = true })
         vim.keymap.set("n", "<leader>wbg", build_project_sym, { noremap = true, silent = true, buffer = true })
-        require('dap_cpp')
     end,
 })
-
--- PY 文件启用调试功能，AI功能
-vim.api.nvim_create_autocmd("BufEnter", {
-    pattern = { "*.py" }, -- 匹配的文件类型
-    callback = function()
-        require('dap_cpp')
-    end,
-})
-
 
 -- 在 Vim 启动时执行 generate_ctags 函数
 vim.cmd([[

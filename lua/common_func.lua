@@ -161,7 +161,7 @@ local function toggle_nvimtree()
   local is_tagbar_open = false
   for _, win in ipairs(vim.api.nvim_list_wins()) do
     local buf = vim.api.nvim_win_get_buf(win)
-    if vim.api.nvim_buf_get_option(buf, "filetype") == "tagbar" then
+    if vim.api.nvim_buf_get_option(buf, "filetype") == "aerial" then
       is_tagbar_open = true
       break
     end
@@ -173,7 +173,7 @@ local function toggle_nvimtree()
   else
     -- 如果 TagBar 打开，则关闭它
     if is_tagbar_open then
-      vim.cmd("TagbarClose")
+      vim.cmd("AerialClose")
     end
     -- 打开 NvimTree
     nvim_tree.toggle()
@@ -190,7 +190,7 @@ local function toggle_tagbar()
   local is_tagbar_open = false
   for _, win in ipairs(vim.api.nvim_list_wins()) do
     local buf = vim.api.nvim_win_get_buf(win)
-    if vim.api.nvim_buf_get_option(buf, "filetype") == "tagbar" then
+    if vim.api.nvim_buf_get_option(buf, "filetype") == "aerial" then
       is_tagbar_open = true
       break
     end
@@ -198,14 +198,14 @@ local function toggle_tagbar()
 
   -- 如果 TagBar 打开，则关闭它
   if is_tagbar_open then
-    vim.cmd("TagbarClose")
+    vim.cmd("AerialClose")
   else
     -- 如果 NvimTree 打开，则关闭它
     if is_nvim_tree_open then
       nvim_tree.toggle()
     end
     -- 打开 TagBar
-    vim.cmd("TagbarOpen")
+    vim.cmd("AerialOpen")
   end
 end
 vim.g.toggle_tagbar = toggle_tagbar

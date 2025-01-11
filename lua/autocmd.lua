@@ -150,13 +150,13 @@ augroup END
 vim.cmd([[
   augroup NvimTreeWindowSize
     autocmd!
-    autocmd WinEnter * if winnr('$') == 1 && &filetype == 'NvimTree' | quit | endif
+    autocmd WinEnter * if winnr('$') == 1 && (&filetype == 'aerial' || &filetype == 'NvimTree' || &filetype == 'qf') | qa! | endif
   augroup END
 ]])
 
 
 -- 选中文字加括号引号 兼容方案
---
+
 vim.cmd([[
 augroup CompVirualSelectText
     autocmd!

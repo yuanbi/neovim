@@ -29,35 +29,15 @@ local original_K_mapping = nil -- 保存 K 快捷键功能
 local debug_args = nil
 local g_is_tagbar_open = false
 local g_is_nvimtree_open = false
+local g_temp_side_window_groupid = nil
 
 
 -----------------------------------------------
 -- 保存并恢复窗口
 -----------------------------------------------
 ---
-function CycleWindows()
-  -- vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-w>w', true, true, true), 'n', false)
-  return
-  -- local current_win = vim.api.nvim_get_current_win()
-  -- local windows = vim.api.nvim_list_wins()
-
-  -- -- 找到当前窗口的索引
-  -- local current_index = 1
-  -- for i, win in ipairs(windows) do
-  --   if win == current_win then
-  --     current_index = i
-  --     break
-  --   end
-  -- end
-
-  -- -- 计算下一个窗口的索引
-  -- local next_index = current_index + 1
-  -- if next_index > #windows then
-  --   next_index = 1
-  -- end
-
-  -- -- 切换到下一个窗口
-  -- vim.api.nvim_set_current_win(windows[next_index])
+local function on_aerial_loaded()
+  -- 检查当前文件类型是否为 aerial
 end
 
 local function save_window_status()
@@ -68,23 +48,48 @@ local function save_window_status()
   g_is_tagbar_open = false
   for _, win in ipairs(vim.api.nvim_list_wins()) do
     local buf = vim.api.nvim_win_get_buf(win)
-    if vim.api.nvim_buf_get_option(buf, "filetype") == "tagbar" then
+    if vim.api.nvim_buf_get_option(buf, "filetype") == "aerial" then
       g_is_tagbar_open = true
       break
     end
   end
 end
 
-local function restore_window()
-  if g_is_nvimtree_open == true then
-    vim.cmd('NvimTreeOpen')
-  end
-  if g_is_tagbar_open == true then
-    vim.cmd("TagbarOpen")
-    -- vim.cmd('wincmd p')
+local function close_dap_repl_buffers()
+  local bufnr = vim.fn.bufnr('^%[dap%-repl%-')  -- 匹配以 "[dap-repl-" 开头的缓冲区
+  while bufnr ~= -1 do  -- -1 表示未找到
+    vim.api.nvim_buf_delete(bufnr, { force = true })  -- 强制删除缓冲区
+    print("Closed buffer:", vim.api.nvim_buf_get_name(bufnr))
+    bufnr = vim.fn.bufnr('^%[dap%-repl%-')  -- 继续查找下一个匹配的缓冲区
   end
 end
 
+local function restore_window()
+  -- 如果有窗口被打开，则设置 autocmd
+  if g_is_tagbar_open == true or g_is_nvimtree_open then
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = 'aerial,NvimTree',  -- 监听所有缓冲区
+      once = true,
+      callback = function()
+          vim.defer_fn(function()
+            vim.cmd('wincmd p')  -- 切换到上一个窗口
+            -- close_dap_repl_buffers()
+          end, 100)
+      end,
+    })
+  end
+
+  -- 检查 NvimTree 是否打开
+  if g_is_nvimtree_open == true then
+    vim.cmd('NvimTreeOpen')  -- 确保命令名称正确
+  end
+
+  -- 检查 Aerial 是否打开
+  if g_is_tagbar_open == true then
+    vim.cmd('AerialOpen')  -- 确保命令名称正确
+  end
+
+end
 -----------------------------------------------------------------
 -- 配置 GDB 以将输出重定向到新建TMUX终端窗口
 -----------------------------------------------------------------
@@ -115,17 +120,13 @@ end
 local function create_tmux_split_and_get_pty()
   
   vim.cmd("cclose")
-  vim.cmd("TagbarClose")
+  vim.cmd("AerialClose")
   vim.cmd("NvimTreeClose")
   terminate_tmux_split_and_get_pty()
 
   -- 创建一个新的 tmux 分屏，大小为当前窗口的三分之一
   local split_cmd = "tmux split-window -h -p 33 -c '#{pane_current_path}' 'sh'"  -- 水平分屏，使用 -v 垂直分屏
   vim.fn.system(split_cmd)
-
-  -- print('Waitting sh load ...')
-  -- vim.fn.system('sleep 3') -- 等待终端启动结束
-  -- vim.fn.system('usleep 60000') -- 等待终端启动结束
 
   -- 获取新分屏的 pty 路径
   local pty_cmd = "tmux display-message -p '#{pane_tty}'; tmux select-pane -R"
@@ -144,9 +145,6 @@ local function get_debug_option(case)
       end
   elseif debug_args == nil then
     debug_args = vim.fn.input('Debug args: ', '-', 'file')
-    -- if #debug_args > 1 then
-      -- debug_args = string.sub(debug_args, 2) -- 从第 2 个字符开始截取
-    -- end
   end
 
   if case == nil then
@@ -287,8 +285,6 @@ function start_debug_session()
       command = 'gdb',  -- GDB 的可执行文件
       args = { "--interpreter=dap", "--eval-command", "set print pretty on",
         "-tty",  pty },
-      -- args = { "--interpreter=dap", "--eval-command", "set print pretty on",
-      --   "--eval-command", "set inferior-tty " .. pty },
     }
 
   end
@@ -312,10 +308,12 @@ function close_debug_session()
     if dap.session() then
         dap.terminate()  -- 终止调试会话
         dap.close()      -- 关闭调试器
+        return
     end
 
     -- 关闭 dap-ui 的界面
     dapui.close()
+
     restore_window()
 end
 
@@ -338,7 +336,7 @@ vim.api.nvim_set_keymap('n', '<leader>dD', '<cmd>lua vim.diagnostic.goto_prev({ 
 vim.api.nvim_set_keymap('n', '<leader>dr', '<cmd>lua start_debug_session()<CR>', { noremap = true, silent = true })  -- 启动调试器
 vim.api.nvim_set_keymap('n', '<leader>dR', '<cmd>lua start_debug_session_new()<CR>', { noremap = true, silent = true }) -- 启动调试器，重新输入被调试程序的路径
 vim.api.nvim_set_keymap('n', '<leader>dk', '<cmd>lua close_debug_session()<CR>', { noremap = true, silent = true }) -- 杀死调试器
-vim.api.nvim_set_keymap('n', '<leader>dK', '<cmd>lua close_debug_session(); terminate_tmux_split_and_get_pty()<CR>', { noremap = true, silent = true }) -- 杀死调试器
+vim.api.nvim_set_keymap('n', '<leader>dK', '<cmd>lua terminate_tmux_split_and_get_pty(); close_debug_session(); <CR>', { noremap = true, silent = true }) -- 杀死调试器
 vim.api.nvim_set_keymap('n', '<leader>db', ':Telescope dap list_breakpoints<CR>', { noremap = true, silent = true }) -- 断点列表
 vim.api.nvim_set_keymap('n', '<leader>dc', ':Telescope dap commands<CR>', { noremap = true, silent = true }) -- DAP 命令列表
 vim.api.nvim_set_keymap('n', '<leader>dq', '<cmd>lua terminate_tmux_split_and_get_pty()<CR>', { noremap = true, silent = true }) -- DAP 命令列表
@@ -365,7 +363,7 @@ end
 
 
 -- nvim 退出自动关闭调试终端
-vim.api.nvim_create_autocmd('VimLeave', {
+vim.api.nvim_create_autocmd('QuitPre', {
   pattern = '*',
   callback = function()
     terminate_tmux_split_and_get_pty()

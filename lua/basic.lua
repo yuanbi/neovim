@@ -1,7 +1,7 @@
 -- 全局配置
 -- 
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+-- vim.g.mapleader = " "
+-- vim.g.maplocalleader = " "
 vim.g.background=dark
 vim.g.ambiwidth=double
 
@@ -110,7 +110,7 @@ vim.o.timeoutlen = 500
 vim.g.syntax=true
 -- 主题设置
 --vim.g.material_style = "deep ocean"
-vim.cmd 'colorscheme gruvbox'
+-- vim.cmd 'colorscheme gruvbox'
 
 -- 强制显示侧边栏，防止时有时无
 vim.cmd 'set signcolumn=yes'
@@ -124,3 +124,5 @@ vim.cmd 'set mouse='
 vim.cmd 'set fileencodings=utf-8,gbk'
 -- MARK 插件默认快捷键关闭
 vim.g.mw_no_mappings=true
+
+vim.opt.termguicolors = true

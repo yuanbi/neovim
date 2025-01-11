@@ -82,7 +82,8 @@ export OPENAI_API_KEY=sk-***
 # Avant some tokenizers error
 
 ```shell
-cp {avante_templates.so,avante_repo_map.so,avante_repo_map.so} ~/.cache/nvim/packer_hererocks/2.1.1713484068/lib/lua/5.1/
+cp /home/byron/.local/share/nvim/site/pack/packer/opt/avante.nvim/build/{avante_templates.so,avante_repo_map.so,avante_repo_map.so} ~/.cache/nvim/packer_hererocks/2.1.1713484068/lib/lua/5.1/
+cp /home/byron/.local/share/nvim/site/pack/packer/start/avante.nvim/build/{avante_templates.so,avante_repo_map.so,avante_repo_map.so} ~/.cache/nvim/packer_hererocks/2.1.1713484068/lib/lua/5.1/
 ```
 
 # 安装python代码格式化工具

@@ -364,6 +364,7 @@ vim.api.nvim_create_autocmd('BufEnter', {
   once = true,
   callback = function()
 
+    -- 确保在设置高亮之前，主题已经切换好了，不然高亮失效
     vim.cmd("highlight clear DapBreakpointText")
     vim.cmd("highlight clear DapRunToCusor")
     vim.cmd("highlight DapRunToCusor guifg=yellow ctermfg=yellow")

@@ -100,7 +100,7 @@ return{
   {
     "morhetz/gruvbox", -- 主题
     config = function()
-        vim.schedule(function()vim.cmd("colorscheme gruvbox")end)
+        -- vim.schedule(function()vim.cmd("colorscheme gruvbox")end)
     end,
   },
 

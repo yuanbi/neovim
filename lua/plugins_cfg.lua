@@ -1,6 +1,6 @@
 local M = {}
 
-local keymap = require('keymaps')
+local keymap = require("keymaps")
 local map = keymap.map
 local nmap = keymap.nmap
 local vmap = keymap.vmap
@@ -226,7 +226,7 @@ function M.FTerm_init()
 			on_stderr = nil
 		}
 	)
-    nmap("<leader>t", '<CMD>lua require("FTerm").toggle()<CR>')
+	nmap("<leader>t", '<CMD>lua require("FTerm").toggle()<CR>')
 end
 
 ------------------------------------------------------------------------------------------
@@ -627,7 +627,7 @@ function M.nvim_tree_init()
 			}
 		}
 	)
-    nmap("<F3>", ":lua vim.g.toggle_nvimtree()<CR>")
+	nmap("<F3>", ":lua vim.g.toggle_nvimtree()<CR>")
 end
 
 ------------------------------------------------------------------------------------------
@@ -688,17 +688,16 @@ function M.gitsigns_init()
 		}
 	)
 
-    -- GIT 命令
-    nmap("<leader>gr", ":Gitsigns refresh<CR>")
-    nmap("<leader>gb", ":Gitsigns blame_line<CR>")
-    nmap("<leader>gi", ":Gitsigns preview_hunk<CR>")
-    nmap("<leader>gd", ":Gvdiffsplit<CR>")
-    -- navigate conflicts of current buffer
-    nmap("gkn", ":Gitsigns next_hunk<CR>")
-    nmap("gkp", ":Gitsigns prev_hunk<CR>")
-    nmap("gku", ":Gitsigns reset_hunk<CR>")
-    nmap("gks", ":Gitsigns stage_hunk<CR>")
-
+	-- GIT 命令
+	nmap("<leader>gr", ":Gitsigns refresh<CR>")
+	nmap("<leader>gb", ":Gitsigns blame_line<CR>")
+	nmap("<leader>gi", ":Gitsigns preview_hunk<CR>")
+	nmap("<leader>gd", ":Gvdiffsplit<CR>")
+	-- navigate conflicts of current buffer
+	nmap("gkn", ":Gitsigns next_hunk<CR>")
+	nmap("gkp", ":Gitsigns prev_hunk<CR>")
+	nmap("gku", ":Gitsigns reset_hunk<CR>")
+	nmap("gks", ":Gitsigns stage_hunk<CR>")
 end
 ------------------------------------------------------------------------------------------
 -- null-ls 配置
@@ -856,11 +855,18 @@ function M.telescope_init()
 		':lua require("telescope").extensions.live_grep_args.live_grep_args({ cwd = vim.g.workspace_dir.get() , default_text= vim.g.get_visual_selection.get()})<CR>'
 	)
 
-    ------------------------------------------------------------------------------------------
-    -- 格式化代码 null-ls
-    ------------------------------------------------------------------------------------------
-    nmap("<leader>ff", ":lua vim.lsp.buf.format()<CR>")
-
+	------------------------------------------------------------------------------------------
+	-- 格式化代码 null-ls
+	------------------------------------------------------------------------------------------
+	vim.api.nvim_create_autocmd(
+		"FileType",
+		{
+			pattern = "cpp,h,hpp,cxx", -- 仅对 Lua 文件生效
+			callback = function()
+                nmap("<leader>ff", ":lua vim.lsp.buf.format()<CR>")
+			end
+		}
+	)
 end
 
 ------------------------------------------------------------------------------------------
@@ -878,7 +884,7 @@ function M.session_manager_init()
 		autosave_only_in_session = false -- 仅在会话中自动保存
 	}
 
-    nmap("<leader>sm", ":SessionManager available_commands<CR>") -- 会话管理
+	nmap("<leader>sm", ":SessionManager available_commands<CR>") -- 会话管理
 end
 
 -- Call the setup function to change the default behavior
@@ -1193,7 +1199,7 @@ function M.aerial_init()
 			}
 		}
 	)
-    nmap("<F2>", ":lua vim.g.toggle_tagbar()<CR>")
+	nmap("<F2>", ":lua vim.g.toggle_tagbar()<CR>")
 end
 
 return M

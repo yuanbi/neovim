@@ -90,7 +90,7 @@ return {
 		dependencies = {"kyazdani42/nvim-web-devicons", opt = true},
 		config = function()
 			pcfg.lualine_init()
-		end,
+		end
 	},
 	{
 		"kyazdani42/nvim-web-devicons" -- 图标支持
@@ -136,7 +136,7 @@ return {
 		config = function()
 			vim.api.nvim_set_keymap("c", "Ar", "AsyncRun ", {noremap = true, silent = false})
 			vim.api.nvim_set_keymap("c", "As", "AsyncStop", {noremap = true, silent = false})
-		end,
+		end
 	},
 	{
 		"morhetz/gruvbox", -- 主题
@@ -153,7 +153,7 @@ return {
 		"akinsho/bufferline.nvim", -- 缓冲区标签栏
 		config = function()
 			pcfg.bufferline_init()
-		end,
+		end
 	},
 	{
 		"nvim-treesitter/nvim-treesitter", -- 语法高亮

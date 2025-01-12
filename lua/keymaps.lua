@@ -234,4 +234,14 @@ vim.api.nvim_set_keymap(
 	}
 )
 
+------------------------------------------
+-- 定义 Lua 文件格式化
+------------------------------------------
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'lua', -- 仅对 Lua 文件生效
+  callback = function()
+    vim.api.nvim_set_keymap('n', '<leader>ff', ':%!npx lua-fmt --use-tabs --stdin<CR>', {noremap = true, silent = true})
+  end,
+})
+
 return M

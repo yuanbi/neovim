@@ -214,7 +214,7 @@ return {
 			require("lsp_config")
             pcfg.null_ls_init()
 		end,
-        ft = {'cpp', 'hpp', 'python', 'h', 'cxx'}
+        ft = {'cpp', 'hpp', 'python', 'h', 'cxx', 'c'}
 	},
     	-- 安装 Telescope 插件
 	{

@@ -858,13 +858,14 @@ function M.telescope_init()
 		':lua require("telescope").extensions.live_grep_args.live_grep_args({ cwd = vim.g.workspace_dir.get() , default_text= vim.g.get_visual_selection.get()})<CR>'
 	)
 
+    nmap2(";", ":Telescope ")
 	------------------------------------------------------------------------------------------
 	-- 格式化代码 null-ls
 	------------------------------------------------------------------------------------------
 	vim.api.nvim_create_autocmd(
 		"FileType",
 		{
-			pattern = "cpp,h,hpp,cxx", -- 仅对 Lua 文件生效
+			pattern = "lua", -- 仅对 Lua 文件生效
 			callback = function()
 				nmap("<leader>ff", ":lua vim.lsp.buf.format()<CR>")
 			end

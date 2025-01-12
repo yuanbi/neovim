@@ -221,19 +221,13 @@ return {
 		"nvim-telescope/telescope.nvim",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
+            "nvim-telescope/telescope-file-browser.nvim", -- 文件浏览器
+            "nvim-telescope/telescope-live-grep-args.nvim", -- 增强 live_grep
+            "nvim-telescope/telescope-ui-select.nvim", -- 增强 UI 选择
 			{
 				"nvim-telescope/telescope-fzf-native.nvim", -- 提供更快的模糊查找
 				build = "make" -- 需要编译
 			},
-			{
-				"nvim-telescope/telescope-file-browser.nvim" -- 文件浏览器
-			},
-			{
-				"nvim-telescope/telescope-live-grep-args.nvim" -- 增强 live_grep
-			},
-			{
-				"nvim-telescope/telescope-ui-select.nvim" -- 增强 UI 选择
-			}
 		},
 		config = function()
 			pcfg.telescope_init()

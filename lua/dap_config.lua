@@ -235,6 +235,16 @@ local function setup_debug_keymaps()
 	vim.api.nvim_set_keymap("n", "<F10>", '<cmd>lua require("dap").step_over()<CR>', {noremap = true, silent = true})
 	vim.api.nvim_set_keymap("n", "<F11>", '<cmd>lua require"dap".step_into()<CR>', {noremap = true, silent = true})
 	vim.api.nvim_set_keymap("n", "I", '<cmd>lua require"dapui".eval()<CR>', {noremap = true, silent = true})
+
+    -- 杀死调试器
+    vim.api.nvim_set_keymap("n", "<leader>dk", "<cmd>lua close_debug_session()<CR>", {noremap = true, silent = true}) 
+    -- 杀死调试器
+    vim.api.nvim_set_keymap(
+        "n",
+        "<leader>dK",
+        "<cmd>lua terminate_tmux_split_and_get_pty(); close_debug_session(); <CR>",
+        {noremap = true, silent = true}
+)
 end
 
 local function clear_debug_keymaps()
@@ -249,6 +259,8 @@ local function clear_debug_keymaps()
 	vim.api.nvim_del_keymap("n", "<F10>")
 	vim.api.nvim_del_keymap("n", "<F11>")
 	vim.api.nvim_del_keymap("n", "I")
+	vim.api.nvim_del_keymap("n", "<leader>dk")
+	vim.api.nvim_del_keymap("n", "<leader>dK")
 end
 
 function start_debug_session()
@@ -305,7 +317,6 @@ function start_debug_session_new()
 end
 
 function close_debug_session()
-	-- terminate_tmux_split_and_get_pty()
 	clear_debug_keymaps()
 	-- 获取 dap 和 dapui 模块
 	local dap = require("dap")
@@ -321,6 +332,7 @@ function close_debug_session()
 
 	-- 关闭 dap-ui 的界面
 	dapui.close()
+	-- terminate_tmux_split_and_get_pty()
 end
 
 -----------------------------------------------
@@ -362,16 +374,7 @@ vim.api.nvim_set_keymap("n", "<leader>dr", "<cmd>lua start_debug_session()<CR>",
 
 -- 启动调试器，重新输入被调试程序的路径
 vim.api.nvim_set_keymap("n", "<leader>dR", "<cmd>lua start_debug_session_new()<CR>", {noremap = true, silent = true})
-
--- 杀死调试器
-vim.api.nvim_set_keymap("n", "<leader>dk", "<cmd>lua close_debug_session()<CR>", {noremap = true, silent = true}) 
--- 杀死调试器
-vim.api.nvim_set_keymap(
-	"n",
-	"<leader>dK",
-	"<cmd>lua terminate_tmux_split_and_get_pty(); close_debug_session(); <CR>",
-	{noremap = true, silent = true}
-) 
+ 
 -- 断点列表
 vim.api.nvim_set_keymap("n", "<leader>db", ":Telescope dap list_breakpoints<CR>", {noremap = true, silent = true}) -- 断点列表
 -- 命令列表
@@ -405,15 +408,17 @@ dap.listeners.before.event_exited["dapui_config"] = function()
 end
 
 -- nvim 退出自动关闭调试终端
-vim.api.nvim_create_autocmd(
-	"QuitPre",
-	{
-		pattern = "*",
-		callback = function()
-			terminate_tmux_split_and_get_pty()
-		end
-	}
-)
+-- vim.api.nvim_create_autocmd(
+-- 	"QuitPre",
+-- 	{
+-- 		pattern = "*",
+-- 		callback = function()
+--             if vim.v.quitting == 1 or vim.v.quitting_bang == 1 then
+--                 terminate_tmux_split_and_get_pty()
+--             end
+-- 		end
+-- 	}
+-- )
 
 -------------------------------
 -- 定义 LSP 诊断图标

@@ -208,17 +208,18 @@ return {
 			"hrsh7th/cmp-path", -- 文件路径补全
 			"hrsh7th/cmp-path", -- 文件路径补全
 			"L3MON4D3/LuaSnip", -- 代码片段引擎
-			{
-				"jose-elias-alvarez/null-ls.nvim", -- 代码格式化插件
-				config = function()
-					pcfg.null_ls_init()
-				end
-			}
 		},
 		config = function()
 			require("lsp_config")
 		end
 	},
+    -- 代码格式化插件
+    {
+        "jose-elias-alvarez/null-ls.nvim", 
+        config = function()
+            pcfg.null_ls_init()
+        end
+    },
 	-- 安装 Telescope 插件
 	{
 		"nvim-telescope/telescope.nvim",

@@ -707,6 +707,7 @@ end
 
 function M.null_ls_init()
 	local null_ls = require("null-ls")
+    vim.g.home_path = vim.fn.expand('~')
 	null_ls.setup(
 		{
 			sources = {
@@ -722,7 +723,7 @@ function M.null_ls_init()
 				), -- 使用 yapf
 				null_ls.builtins.formatting.clang_format.with(
 					{
-						extra_args = {"-style", "file:" .. vim.fn.expand("~") .. "/.config/nvim/.clang-format"}, -- 使用项目根目录下的 .clang-format 文件
+						extra_args = {"-style", "file:" .. vim.g.home_path .. "/.config/nvim/.clang-format"}, -- 使用项目根目录下的 .clang-format 文件
 						filetypes = {"cpp", "c", "cxx", "hpp", "h"}
 					}
 				)

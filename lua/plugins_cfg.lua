@@ -85,9 +85,8 @@ end
 function M.bufferline_init()
 	require("bufferline").setup {
 		options = {
-			priority = 1000,
 			mode = "buffers",
-			numbers = "ordinal",
+			numbers = "none",
 			separator_style = "slant",
 			show_close_icon = false,
 			show_buffer_close_icons = false,
@@ -104,18 +103,21 @@ function M.bufferline_init()
 				return icon .. count -- 显示图标和数量
 			end,
 			custom_filter = function(bufnr)
-				local buftype = vim.api.nvim_buf_get_option(bufnr, "buftype")
-				-- local ret = true
-				-- if buftype == 'quickfix' then
-				--   ret = false
-				-- elseif buftype == '' then
-				--   vim.cmd(':Startify')
-				--   ret = false
-				-- end
-				-- return ret
-				return buftype ~= "quickfix" -- 过滤掉 Quickfix 窗口
-			end
-			-- show_tab_indicators = false
+				-- 排除 quickfix 缓冲区
+				if vim.api.nvim_buf_get_option(bufnr, "buftype") == "quickfix" then
+					return false
+				end
+                return true
+			end,
+            highlights = {
+                buffer_selected = { 
+                    gui = "underline",
+                    guifg = "#ffffff",
+                    guibg = "#000000",
+                    -- 如果你还想自定义前景色/背景色，可以添加如下配置 guifg = "任意颜色", -- 比如 #ffffff guibg = "任意颜色", -- 比如 #000000 
+                }, 
+            },
+			show_tab_indicators = true
 		}
 	}
 end
@@ -863,7 +865,7 @@ function M.telescope_init()
 		{
 			pattern = "cpp,h,hpp,cxx", -- 仅对 Lua 文件生效
 			callback = function()
-                nmap("<leader>ff", ":lua vim.lsp.buf.format()<CR>")
+				nmap("<leader>ff", ":lua vim.lsp.buf.format()<CR>")
 			end
 		}
 	)
@@ -900,8 +902,8 @@ function M.aerial_init()
 				-- min_width and max_width can be a list of mixed types.
 				-- max_width = {40, 0.2} means "the lesser of 40 columns or 20% of total"
 				max_width = {40, 0.2},
-				width = nil,
-				min_width = 40,
+				width = 40,
+				min_width = 10,
 				-- key-value pairs of window-local options for aerial window (e.g. winhl)
 				win_opts = {},
 				-- Determines the default direction to open the aerial window. The 'prefer'

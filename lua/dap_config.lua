@@ -54,11 +54,11 @@ end
 -----------------------------------------------------------------
 local function restore_window()
 	-- 如果有窗口被打开，则设置 autocmd
-	if g_is_tagbar_open == true or g_is_nvimtree_open then
+	if g_is_tagbar_open == true then
 		vim.api.nvim_create_autocmd(
 			"FileType",
 			{
-				pattern = "aerial,NvimTree", -- 监听所有缓冲区
+				pattern = "aerial", -- 监听所有缓冲区
 				once = true,
 				callback = function()
 					vim.defer_fn(
@@ -66,7 +66,26 @@ local function restore_window()
 							vim.cmd("wincmd p") -- 切换到上一个窗口
 							-- close_dap_repl_buffers()
 						end,
-						10
+						5
+					)
+				end
+			}
+		)
+	end
+
+	if g_is_nvimtree_open == true then
+		vim.api.nvim_create_autocmd(
+			"FileType",
+			{
+				pattern = "NvimTree", -- 监听所有缓冲区
+				once = true,
+				callback = function()
+					vim.defer_fn(
+						function()
+							vim.cmd("wincmd p") -- 切换到上一个窗口
+							-- close_dap_repl_buffers()
+						end,
+						5
 					)
 				end
 			}
@@ -82,6 +101,8 @@ local function restore_window()
 	if g_is_tagbar_open == true then
 		vim.cmd("AerialOpen") -- 确保命令名称正确
 	end
+    g_is_nvimtree_open = false
+    g_is_tagbar_open = false
 end
 
 -----------------------------------------------------------------
@@ -294,13 +315,12 @@ function close_debug_session()
 	if dap.session() then
 		dap.terminate() -- 终止调试会话
 		dap.close() -- 关闭调试器
+        restore_window()
 		return
 	end
 
 	-- 关闭 dap-ui 的界面
 	dapui.close()
-
-	restore_window()
 end
 
 -----------------------------------------------

@@ -251,6 +251,9 @@ return {
 				vim.api.nvim_set_hl(0, "FloatBorder", {bg = "NONE"}) -- 浮动窗口边框透明
 				vim.api.nvim_set_hl(0, "NormalFloat", {bg = "NONE"}) -- 浮动窗口背景透明
 
+				vim.api.nvim_set_hl(0, "@variable.parameter.cpp", {italic = true, }) -- 函数参数斜体
+				vim.api.nvim_set_hl(0, "@lsp.type.parameter.cpp", {italic = true}) -- 函数参数斜体
+
 				vim.api.nvim_set_hl(0, "TelescopePreviewBorder", {fg = "#777777", bg = "NONE"})
 				vim.api.nvim_set_hl(0, "TelescopeResultsBorder", {fg = "#777777", bg = "NONE"})
 				vim.api.nvim_set_hl(0, "TelescopePromptTitle", {bg = "NONE", fg = "#e29c45", bold = true})
@@ -524,7 +527,7 @@ return {
 		-- version = nil, -- 最新提交
 		-- ft = programming_filetypes,
 		config = function()
-			require("copilot").setup({})
+			-- require("copilot").setup({})
 			require("config.avante_cfg")
 		end,
 		build = vim.g.is_unix == 1 and "make" or nil, -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`

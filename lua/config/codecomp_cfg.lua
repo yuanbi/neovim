@@ -53,7 +53,7 @@ function M:setup_codecomp()
 	require("codecompanion").setup(
 		{
 			opts = {
-				language = "Chinese"
+				language = "Chinese",
 			},
 			adapters = {
 				qwen = function()
@@ -128,41 +128,46 @@ function M:setup_codecomp()
 						}
 					)
 				end,
-				azure_deepseek = function()
+				hw_deepseek = function()
 					return require("codecompanion.adapters").extend(
 						"openai_compatible",
 						{
-							name = "azure_deepseek",
-							opts = {
-								proxy = "socks5://127.0.0.1:10807",
-							},
+							name = "huawei_deepseek",
 							env = {
-								url = "https://DeepSeek-R1-jrybg.eastus2.models.ai.azure.com",
-								-- chat_url = "/v1/chat/completions",
-								api_key = vim.fn.getenv("AZURE_DSKR1"),
+								url = "https://infer-modelarts-cn-southwest-2.modelarts-infer.com/v1/infers/f354eacc-a2c5-43b4-a785-e5aadca988b3",
+								chat_url = "/v1/chat/completions",
+								api_key = vim.fn.getenv("HUAWEI_CLOUD_API"),
 							},
 							schema = {
 								model = {
-									default = 'deepseek-r1',
+									default = 'DeepSeek-V3', -- DeepSeek-R1
+
 								}
 							}
 						}
 					)
 				end,
-				luch_deepseek = function()
+				gemini = function()
 					return require("codecompanion.adapters").extend(
-						"openai_compatible",
+						"gemini",
 						{
-							name = "luch_deepseek",
+							name = "gemini",
+							opts = {
+								proxy = 'socks5://127.0.0.1:10807'
+							},
+							-- url = "https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse&key=${api_key}",
 							env = {
-								url = "https://cloud.luchentech.com",
-								chat_url = "/api/maas/chat/completions",
-								model = "deepseek-ai/DeepSeek-R1",
-								api_key = vim.fn.getenv("LUCHENTECH_DSK"),
+								api_key = vim.fn.getenv("GEMINI_API_KEY"),
+								-- model = "schema.model.default",
+							},
+							schema = {
+								model = {
+									default = "gemini-2.0-flash",
+								}
 							}
 						}
 					)
-				end
+				end,
 			},
 			strategies = {
 				chat = {
@@ -184,7 +189,7 @@ function M:setup_codecomp()
 					show_settings = true, -- Show LLM settings at the top of the chat buffer?
 					show_token_count = true, -- Show the token count for each response?
 					start_in_insert_mode = true, -- Open the chat buffer in insert mode?
-					adapter = "qwen",
+					adapter = "gemini",
 					keymaps = {
 						send = {
 							modes = {n = "<Enter>", i = "<C-s>"}
@@ -206,7 +211,7 @@ function M:setup_codecomp()
 							description = "Choose our"
 						}
 					},
-					adapter = "qwen"
+					adapter = "gemini"
 				}
 			},
 			display = {

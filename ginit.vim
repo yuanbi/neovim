@@ -5,8 +5,8 @@ set mouse=a
 " set guifont=Cascadia\ Code:h10,Noto\ Color\ Emoji:h10
 " GuiFont! Cascadia\ Code:h10
 set guifont=Cascadia\ Code:h10
-" 设置字体
 
+let g:neovide_refresh_rate = 60
 let g:neovide_title_background_color = "#161616"
 let g:neovide_hide_mouse_when_typing = v:true
 
